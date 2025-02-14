@@ -11,3 +11,17 @@ items:
     include:
       path: sub-section/toc.yaml
       mode: link
+  - name: openapi-json
+    include:
+      path: openapi-json
+      includers:
+        - name: openapi-json
+          input: openapi/swagger.json
+      mode: link
+  - name: openapi-yaml
+    include:
+      path: openapi-yaml
+      includers:
+        - name: openapi-yaml
+          input: openapi/swagger.yaml
+      mode: link

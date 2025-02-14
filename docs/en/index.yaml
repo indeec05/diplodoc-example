@@ -8,3 +8,7 @@ links:
     href: anotherpage.md
   - title: Sub-section on index page
     href: sub-section/
+  - title: Swagger in json format
+    href: openapi-json
+  - title: Swagger in yaml format
+    href: openapi-yaml
