@@ -1,0 +1,34 @@
+
+        <!DOCTYPE html>
+        <html lang="ru" dir="ltr">
+            <head>
+                <meta charset="utf-8">
+                <base href="../../../" />
+                <meta name="generator" content="Diplodoc Platform v4.57.7"  />
+
+                
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Общее описание протокола | W1 H2H 1.5</title>
+                <style type="text/css">
+                    body {
+                        height: 100vh;
+                    }
+                </style>
+                <link type="text/css" rel="stylesheet" href="_bundle/vendor.css" />
+<link type="text/css" rel="stylesheet" href="_bundle/app.css" />
+                
+            </head>
+            <body class="g-root g-root_theme_light">
+                <div id="root"></div>
+                <script type="application/javascript">
+                   window.STATIC_CONTENT = false
+                   window.__DATA__ = {"data":{"meta":{"metadata":[{"name":"generator","content":"Diplodoc Platform v4.57.7"}]},"assets":[],"headings":[{"title":"Авторизация","href":"docs/ru/w1-h2h1.5/protocol.html#авторизация","level":2},{"title":"Проверка ЭЦП ответов","href":"docs/ru/w1-h2h1.5/protocol.html#проверка-эцп-ответов","level":2},{"title":"Обработка ошибок","href":"docs/ru/w1-h2h1.5/protocol.html#обработка-ошибок","level":2}],"title":"Общее описание протокола","includes":[],"html":"<p>Взаимодействие с сервисом происходит, путем передачи HTTP запросов на URL (далее в примерах {baseUrl})::</p>\n<table>\n<thead>\n<tr>\n<th style=\"text-align:left\">https://wl.walletone.com/checkout/InvoicingApi/{version}/</th>\n</tr>\n</thead>\n</table>\n<p>Формат передаваемых данных в запросах и ответах - JSON. Для поддержания обратной совместимости методов API, во всех запросах требуется передавать номер версии. Актуальная версия API - v1.5.</p>\n<h2 id=\"авторизация\"><a href=\"docs/ru/w1-h2h1.5/protocol.html#авторизация\" class=\"yfm-anchor\" aria-hidden=\"true\"><span class=\"visually-hidden\" data-no-index=\"true\">Авторизация</span></a>Авторизация</h2>\n<p>Все запросы к API должны содержать заголовки, идентифицирующие интернет магазин и подтверждающие подлинность передаваемых данных:</p>\n<ul>\n<li>X-Wallet-UserId - идентификатор интернет магазина,</li>\n<li>X-Wallet-Timestamp - дата формирования запроса в часовом поясе UTC+0,</li>\n<li>X-Wallet-Signature - цифровая подпись (ЭЦП) запроса</li>\n</ul>\n<p>Цифровая подпись запроса формируется путем конкатенации URL, на который отправляется запрос, идентификатора магазина, значения заголовка X-Wallet-Timestamp, тела запроса и секретного ключа магазина. Полученная строка, представленная в кодировке UTF-8, подписывается с помощью выбранного алгоритма ЭЦП, после чего байтовое представление подписи кодируется в Base64:</p>\n<table>\n<thead>\n<tr>\n<th style=\"text-align:left\">Signature = Base64(SignatureMethod(UTF8(\u000bURL + MerchantId + Timestamp + RequestBody + SecretKey)));</th>\n</tr>\n</thead>\n</table>\n<p>Пример:</p>\n<table>\n<thead>\n<tr>\n<th style=\"text-align:left\">X-Wallet-UserId: 123456789012 X-Wallet-Timestamp: 2015-01-07T21:45:33 X-Wallet-Signature: 0J7Qv9C70LDRgtCwINC30LDQutCw0LfQsA==</th>\n</tr>\n</thead>\n</table>\n<table>\n<thead>\n<tr>\n<th style=\"text-align:left\">Обратите внимание: для взаимодействия с сервисом, использование цифровой подписи является обязательным условиям. Мерчант не сможет воспользоваться этим сервисом, если в настройках кассы у него отключена проверка цифровой подписи.</th>\n</tr>\n</thead>\n</table>\n<h2 id=\"проверка-эцп-ответов\"><a href=\"docs/ru/w1-h2h1.5/protocol.html#проверка-эцп-ответов\" class=\"yfm-anchor\" aria-hidden=\"true\"><span class=\"visually-hidden\" data-no-index=\"true\">Проверка ЭЦП ответов</span></a>Проверка ЭЦП ответов</h2>\n<p>В качестве дополнительной меры безопасности магазин может проверять подлинность ответов возвращаемых сервером. Для этого, сервис добавляет в каждый ответ заголовки:</p>\n<ul>\n<li>X-Wallet-Timestamp - дата формирования ответа в часовом поясе UTC+0,</li>\n<li>X-Wallet-Signature - цифровая подпись ответа.</li>\n</ul>\n<p>Цифровая подпись в данном случае формируется путем конкатенации значения подписи полученной в <strong>запросе</strong>, заголовка ответа X-Wallet-Timestamp, тела ответа и секретного ключа магазина. Полученная строка преобразовывается и хешируется аналогично алгоритму для запросов:</p>\n<table>\n<thead>\n<tr>\n<th style=\"text-align:left\">Signature = Base64(SignatureMethod(UTF8(\u000bIncomingSignature + Timestamp + ResponseBody + SecretKey)))</th>\n</tr>\n</thead>\n</table>\n<table>\n<thead>\n<tr>\n<th style=\"text-align:left\">Метод формирования ЭЦП и «секретный ключ» можно настроить в личном кабинете учетной записи магазина на вкладке «Настройки» в разделе «Интернет-магазин».</th>\n</tr>\n</thead>\n</table>\n<h2 id=\"обработка-ошибок\"><a href=\"docs/ru/w1-h2h1.5/protocol.html#обработка-ошибок\" class=\"yfm-anchor\" aria-hidden=\"true\"><span class=\"visually-hidden\" data-no-index=\"true\">Обработка ошибок</span></a>Обработка ошибок</h2>\n<p>Ошибки возвращаются в HTTP-статусе кодом 4xx и 5xx, согласно <a href=\"http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\" target=\"_blank\" rel=\"noreferrer noopener\">RFC 2616</a>. В ответе может содержаться объект ErrorDetails, содержащий дополнительную информацию об ошибке. Например</p>\n<table>\n<thead>\n<tr>\n<th style=\"text-align:left\">{     \"Error\": \"OPERATION_LIMIT_EXCEEDED\",     \"ErrorDescripton\": \"Превышен лимит на количество операций\" }</th>\n</tr>\n</thead>\n</table>\n","leading":false},"router":{"pathname":"docs/ru/w1-h2h1.5/protocol","depth":4},"lang":"ru","langs":["ru"]};
+                </script>
+                <script src="docs/ru/w1-h2h1.5/toc.js" type="application/javascript"></script>
+                
+                <script type="application/javascript" src="_bundle/react.js"></script>
+<script type="application/javascript" src="_bundle/app.js"></script>
+<script type="application/javascript" src="_bundle/vendor.js"></script>
+            </body>
+        </html>
+    

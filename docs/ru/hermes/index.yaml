@@ -1,9 +1,0 @@
-title: Documentation Template
-blocks:
-  - type: 'content-layout-block'
-    textContent:
-      title: 'Знакомство'
-      text: "<p>Ниже представлена документация высокеопроизводительного кошелькового решения. Оно выделяется:</p>\n <ul><li>Стабильностью работы</li><li>Держит нагрузку</li><li>Развивается</li></ul>"
-links:
-  - title: About
-    href: about.md

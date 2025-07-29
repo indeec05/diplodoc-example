@@ -1,0 +1,34 @@
+
+        <!DOCTYPE html>
+        <html lang="ru" dir="ltr">
+            <head>
+                <meta charset="utf-8">
+                <base href="../../../../" />
+                <meta name="generator" content="Diplodoc Platform v4.57.7"  />
+
+                
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Documentation Project Template</title>
+                <style type="text/css">
+                    body {
+                        height: 100vh;
+                    }
+                </style>
+                <link type="text/css" rel="stylesheet" href="_bundle/vendor.css" />
+<link type="text/css" rel="stylesheet" href="_bundle/app.css" />
+                
+            </head>
+            <body class="g-root g-root_theme_light">
+                <div id="root"></div>
+                <script type="application/javascript">
+                   window.STATIC_CONTENT = false
+                   window.__DATA__ = {"data":{"meta":{"metadata":[{"name":"generator","content":"Diplodoc Platform v4.57.7"}]},"assets":[],"headings":[{"title":"Request","href":"docs/en/openapi/TransactionData/searchTrxId.html#request","level":2,"items":[{"title":"Query parameters","href":"docs/en/openapi/TransactionData/searchTrxId.html#query-parameters","level":3}]},{"title":"Responses","href":"docs/en/openapi/TransactionData/searchTrxId.html#responses","level":2},{"title":"200 OK","href":"docs/en/openapi/TransactionData/searchTrxId.html#200-ok","level":2,"items":[{"title":"Body","href":"docs/en/openapi/TransactionData/searchTrxId.html#body","level":3}]},{"title":"404 Not Found","href":"docs/en/openapi/TransactionData/searchTrxId.html#404-not-found","level":2}],"title":"","includes":[],"html":"<div class=\"openapi\">\n<h1>Запрос идентификатора Операции СБП</h1>\n<p>Метод должен использоваться Участником СБП в роли банка Плательщика перед формированием запроса статуса Операции СБП (Сообщения СБП x11) при отсутствии у него данных о номере Операции СБП в результате неполучения ответа на <u>первое</u> Сообщение СБП от ОПКЦ СБП за установленное время. <span style=\"color:red\">Метод доступен по сертификату Участника СБП.</span></p>\n<h2 id=\"request\"><a href=\"docs/en/openapi/TransactionData/searchTrxId.html#request\" class=\"yfm-anchor\" aria-hidden=\"true\"><span class=\"visually-hidden\" data-no-index=\"true\">Request</span></a>Request</h2>\n<div class=\"openapi__requests\">\n<div class=\"openapi__request__wrapper\" style=\"--method:var(--dc-openapi-methods-get);margin-bottom:12px\">\n<div class=\"openapi__request\">\n<p class=\"openapi__method\">GET</p>\n\n    <div class=\"yfm-clipboard\">\n        <pre><code class=\"hljs text\">/v01/transaction/search\n</code></pre>\n\n        <button class=\"yfm-clipboard-button\">\n            <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" class=\"yfm-clipboard-icon\" data-animation=\"16\">\n                <path fill=\"currentColor\" d=\"M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z\"></path>\n                <path stroke=\"currentColor\" fill=\"transparent\" stroke-width=\"1.5\" d=\"M9.5 13l3 3l5 -5\" visibility=\"hidden\">\n                    <animate id=\"visibileAnimation-16\" attributeName=\"visibility\" from=\"hidden\" to=\"visible\" dur=\"0.2s\" fill=\"freeze\" begin></animate>\n                    <animate id=\"hideAnimation-16\" attributeName=\"visibility\" from=\"visible\" to=\"hidden\" dur=\"1s\" begin=\"visibileAnimation-16.end+1\" fill=\"freeze\"></animate>\n                </path>\n            </svg>\n        </button>\n    </div>\n</div>\n</div>\n</div>\n<h3 id=\"query-parameters\"><a href=\"docs/en/openapi/TransactionData/searchTrxId.html#query-parameters\" class=\"yfm-anchor\" aria-hidden=\"true\"><span class=\"visually-hidden\" data-no-index=\"true\">Query parameters</span></a>Query parameters</h3>\n<table>\n<tbody>\n<tr>\n<td>\n<p><strong>Name</strong></p>\n</td>\n<td>\n<p><strong>Description</strong></p>\n</td>\n</tr>\n<tr>\n<td class=\"openapi-table-parameter-name\">\n<p>msg-num<span class=\"openapi__required\">*</span></p>\n</td>\n<td>\n<p><strong>Type:</strong> string</p>\n<p>Уникальный Номер Сообщения от Банка Плательщика (ЭБД 79). Применим для Сообщений СБП: C01, B05, D01, G05, M05.<br /></p>\n<p><em class=\"openapi-description-annotation\">Min length:</em> <code>32</code></p>\n<p><em class=\"openapi-description-annotation\">Max length:</em> <code>32</code></p>\n</td>\n</tr>\n</tbody>\n</table>\n<h2 id=\"responses\"><a href=\"docs/en/openapi/TransactionData/searchTrxId.html#responses\" class=\"yfm-anchor\" aria-hidden=\"true\"><span class=\"visually-hidden\" data-no-index=\"true\">Responses</span></a>Responses</h2>\n<div class=\"openapi__response__code__200\">\n<h2 id=\"200-ok\"><a href=\"docs/en/openapi/TransactionData/searchTrxId.html#200-ok\" class=\"yfm-anchor\" aria-hidden=\"true\"><span class=\"visually-hidden\" data-no-index=\"true\">200 OK</span></a>200 OK</h2>\n<p>Успешный ответ</p>\n<h3 id=\"body\"><a href=\"docs/en/openapi/TransactionData/searchTrxId.html#body\" class=\"yfm-anchor\" aria-hidden=\"true\"><span class=\"visually-hidden\" data-no-index=\"true\">Body</span></a>Body</h3>\n<p>text/plain</p>\n<p><strong>Type:</strong> string</p>\n<p><strong>Description:</strong> Идентификатор Операции СБП (ЭБД 27)</p>\n</div>\n<div class=\"openapi__response__code__404\">\n<h2 id=\"404-not-found\"><a href=\"docs/en/openapi/TransactionData/searchTrxId.html#404-not-found\" class=\"yfm-anchor\" aria-hidden=\"true\"><span class=\"visually-hidden\" data-no-index=\"true\">404 Not Found</span></a>404 Not Found</h2>\n<p>Ресурс не найден</p>\n</div>\n\n</div>\n<template id=\":Deprecated_template\" label=\"Deprecated\"><dfn class=\"yfm yfm-term_dfn\" id=\":Deprecated_element\" role=\"dialog\"><p>No longer supported, please use an alternative and newer version.</p>\n</dfn></template>","leading":false},"router":{"pathname":"docs/en/openapi/TransactionData/searchTrxId","depth":5},"lang":"ru","langs":["ru"]};
+                </script>
+                <script src="docs/en/toc.js" type="application/javascript"></script>
+                
+                <script type="application/javascript" src="_bundle/react.js"></script>
+<script type="application/javascript" src="_bundle/app.js"></script>
+<script type="application/javascript" src="_bundle/vendor.js"></script>
+            </body>
+        </html>
+    
