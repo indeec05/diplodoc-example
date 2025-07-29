@@ -1,9 +1,0 @@
-title: Refill service
-blocks:
-  - type: 'content-layout-block'
-    textContent:
-      title: 'Знакомство'
-      text: "<p>Refill service"
-links:
-  - title: About
-    href: about.md
