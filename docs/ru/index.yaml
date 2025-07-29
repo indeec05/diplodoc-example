@@ -1,0 +1,44 @@
+title: W1 - Developer portal
+description: W1 - Developer portal
+meta:
+  title: Метаданные
+  noIndex: true
+blocks:
+  - type: 'slider-block'
+    title:
+      text: 'Процессинги'
+    children:
+      - type: 'basic-card'
+        url: 'mycellium/docs/1_Obshie-svedeniya.md'
+        title: 'Мицелиум'
+        text: 'Высокопроизводиьтельное кошельковое решение'
+        icon: 'mycellium/mycellium-icon.png'
+      - type: 'basic-card'
+        url: 'hermes'
+        title: 'Гермес'
+        text: 'Высокопроизводиьтельное кошельковое решение'
+        icon: 'hermes/hermes-icon.png'
+      - type: 'basic-card'
+        url: 'w1-h2h1.5/intro.md'
+        title: 'W1'
+        text: 'Высокопроизводиьтельное кошельковое решение'
+        icon: 'hermes/hermes-icon.png'
+  - type: 'slider-block'
+    title:
+      text: 'Компоненты'
+    children:
+      - type: 'basic-card'
+        url: 'kyc2'
+        title: 'KYC 2'
+        text: 'KYC 2 предоставляет различные способы проверки данных физических и юридических лиц'
+        icon: 'kyc2/icon.png'
+      - type: 'basic-card'
+        url: 'refill'
+        title: 'Refill'
+        text: 'Refill Service предоставляет фунукционал эквайринга'
+        icon: 'refill/refill-icon.png'
+      - type: 'basic-card'
+        url: 'x-plat/intro.md'
+        title: 'X-Plat'
+        text: 'X-Plat - высокпроизводительное выплатное решение'
+        icon: 'x-plat/file.svg'

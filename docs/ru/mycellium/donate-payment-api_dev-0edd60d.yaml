@@ -1,0 +1,1127 @@
+openapi: 3.0.1
+x-stoplight:
+  id: hoz5nh2f8bway
+info:
+  title: donate-payment-api
+  description: ''
+  version: dev-0edd60d
+servers:
+  - url: 'http://10.202.37.1:3180'
+    description: Generated server url
+tags:
+  - name: Actuator
+    description: Monitor and interact
+    externalDocs:
+      description: Spring Boot Actuator Web API Documentation
+      url: 'https://docs.spring.io/spring-boot/docs/current/actuator-api/html/'
+paths:
+  /refreshtoken:
+    put:
+      tags:
+        - auth-controller
+      operationId: authenticationTokenRefresh
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PaymentAuthResponse'
+        '400':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-stoplight:
+        id: d3kcex1h8tnr6
+  /bySignature:
+    get:
+      tags:
+        - auth-controller
+      operationId: authenticate
+      parameters:
+        - name: donateWalletNumber
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: Кошелек блогера (получателя доната)
+        - name: date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+          description: Время создания запроса по UTC. Может быть в пределах +- 10 минут (Время создания запроса по UTC. Может быть в пределах +- 10 минут)
+        - name: partnerId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Идентификатор партнера
+        - name: externalUserId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: id донатера
+        - name: contentId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Id трансляции
+        - name: receiverNickname
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Никнейм блогера (получателя доната)
+        - name: userNickname
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Никнейм отправителя доната
+        - name: redirectto
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: isAccepted
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: sign
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Подпись
+        - name: theme
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Тема
+        - name: urlAvatarIcon
+          in: query
+          required: false
+          schema:
+            type: string
+          description: URL иконки
+        - name: callbackId
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Номер операции. Далее по callbackId возможен опрос статуса в API через метод GET Donate CallbackId
+      responses:
+        '200':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PaymentAuthResponse'
+        '400':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-stoplight:
+        id: 6rr4jqogyk2zx
+      summary: GET bySignature
+      description: |-
+        Метод для формирования Signature партнером, для перенаправления пользователя на платежные страницы для совершения доната.
+        (После формирования Signature и совершения доната пользователь возможен опрос статуса доната по callbackId, сгенерированному партнером, через метод [GET Donation CallbackId](https://w1.stoplight.io/docs/mycellium-api/04943a5985142-get-donate-callback-id))
+
+        Список параметров на подпись, передаваемых партнером:
+        sign=BASE64(SignatureMethod(UTF8(URL)))
+
+
+        где:
+
+
+        BASE64 | Функция преобразования бинарных данных (массива байт) к BASE64 строке 
+        ---------|----------
+         SignatureMethod | Криптографическая функция используемая для вычисления ЭЦП (метод подписи ключа Партнера SHA1withRSA) 
+         UTF8 | Функция, которая преобразовывает строку к кодировке UTF8 и возвращает массив байт 
+         URL | Url-адрес, на который направляется запрос `*`
+
+        `*` - Параметры, передаваемые в URL:
+
+
+        |  НАЗВАНИЕ ПАРАМЕТРА | ТИП ДАННЫХ |                                                               ОПИСАНИЕ                                                              |
+        |-------------------:|:----------:|:-----------------------------------------------------------------------------------------------------------------------------------|
+        | **externalUserId**      | String     | id донатера                                                                                                                         |
+        | **callbackId**          | String     | Номер операции, по которому возможен будет опрос статуса в gateway, по которому будет колбек в сторону партнера                     |
+        | **contentId**           | String     | Id трансляции                                                                                                                       |
+        | **date**                | DateTime   | Время создания запроса по UTC. Может быть в пределах +- 10 минут (Время создания запроса по UTC. Может быть в пределах +- 10 минут) |
+        | **donateWalletNumber**  | Long       | Кошелек блогера (получателя доната)                                                                                                 |
+        | **eventType**  | String       | Тип доната  `**`  (поле CASE-INSENSITIVE, т.е. не чувствительно к регистру)                                                                                           |
+        | **nicknameUser**        | String     | Никнейм отправителя доната                                                                                                          |
+        | **nicknameWalletOwner**        | String     | Никнейм блогера (получателя доната)                                                                                                         |
+        | **partnerId**           | String     | Идентификатор партнера                                                                                                              |
+        | **redirectto**          | String     | Адрес назначения для пользователя, кодированный в UrlEncode                                                                         |
+
+
+        `**` - возможные значения **eventType**:
+
+        - none
+        - channel
+        - stream
+  '/externalId/{externalId}':
+    get:
+      tags:
+        - operation-controller
+      operationId: getDonateOperationStatusBy
+      parameters:
+        - name: externalId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DonateOperationResponseDTO'
+        '400':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-stoplight:
+        id: bo4s4jkzx4o66
+      x-internal: true
+  /donate:
+    post:
+      tags:
+        - operation-controller
+      operationId: donate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentDonateOperationRequestDTO'
+        required: true
+      responses:
+        '200':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DonateOperationProcessingResponseDTO'
+        '400':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-stoplight:
+        id: iouxtjlieyfib
+      summary: POST Donate
+      description: Операция для совершения доната
+      x-internal: true
+  '/wallet/payment-bindings/{id}':
+    delete:
+      tags:
+        - operation-controller
+      operationId: deletePaymentBindingsById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: default response
+        '400':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-stoplight:
+        id: eq5r38s7ewjaa
+      x-internal: true
+  /wallet/payment-bindings:
+    get:
+      tags:
+        - operation-controller
+      operationId: getPaymentBindings
+      parameters:
+        - name: paymentAgentId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Params'
+        '400':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-stoplight:
+        id: dm5hi1sh8wj3j
+      x-internal: true
+  /donate/agents/active:
+    get:
+      tags:
+        - user-controller
+      operationId: getActiveAgentList
+      responses:
+        '200':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PaymentAgentDTO'
+        '400':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-stoplight:
+        id: 3y2yqjr7jnlmm
+      x-internal: true
+  '/config/{id}':
+    get:
+      tags:
+        - user-controller
+      operationId: getPartnerConfig
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PublicPartnerConfigDTO'
+        '400':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-stoplight:
+        id: n13sjimmjgh94
+      x-internal: true
+  /health/ping:
+    get:
+      tags:
+        - internal-controller
+      operationId: getHealthCheckPing
+      responses:
+        '200':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Ping'
+        '400':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-stoplight:
+        id: r79eh4p7rxs67
+      x-internal: true
+  /health/**:
+    get:
+      tags:
+        - Actuator
+      summary: Actuator web endpoint 'health-path'
+      operationId: handle_0
+      responses:
+        '200':
+          description: default response
+          content: {}
+        '400':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-stoplight:
+        id: 40kt5188mldvu
+      x-internal: true
+  /health:
+    get:
+      tags:
+        - Actuator
+      summary: Actuator web endpoint 'health'
+      operationId: handle_1
+      responses:
+        '200':
+          description: default response
+          content: {}
+        '400':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-stoplight:
+        id: oyuaor7p41gvk
+      x-internal: true
+  /info:
+    get:
+      tags:
+        - Actuator
+      summary: Actuator web endpoint 'info'
+      operationId: handle_2
+      responses:
+        '200':
+          description: default response
+          content: {}
+        '400':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-stoplight:
+        id: hll1oyezkh1a8
+      x-internal: true
+  /metrics:
+    get:
+      tags:
+        - Actuator
+      summary: Actuator web endpoint 'prometheus'
+      operationId: handle_3
+      responses:
+        '200':
+          description: default response
+          content: {}
+        '400':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-stoplight:
+        id: hja874i2qvbo8
+      x-internal: true
+components:
+  schemas:
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        description:
+          type: string
+        fieldErrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiFieldError'
+      x-stoplight:
+        id: zgqk456ieowyq
+    ApiFieldError:
+      type: object
+      properties:
+        objectName:
+          type: string
+        field:
+          type: string
+        message:
+          type: string
+      x-stoplight:
+        id: dbodxtdhz93rr
+    PaymentAuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        refreshToken:
+          type: string
+      x-stoplight:
+        id: 2aqvjfehp99oq
+    DonateOperationResponseDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        contentId:
+          type: string
+        receiverNickname:
+          type: string
+        userNickname:
+          type: string
+        donateWalletNumber:
+          type: integer
+          format: int64
+        externalUserId:
+          type: string
+        amount:
+          type: number
+        status:
+          type: string
+          enum:
+            - CREATED
+            - REQUEST
+            - ERROR
+            - PROCESSING
+            - COMPLETED
+            - CANCELED
+            - PARTIAL_COMPLETED
+        operationExternalId:
+          type: string
+        description:
+          type: string
+        error:
+          type: string
+        donateText:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          format: date-time
+        callbackId:
+          type: string
+      x-stoplight:
+        id: e9nhx1idquup9
+    PaymentDonateOperationRequestDTO:
+      type: object
+      x-stoplight:
+        id: rjptk5thnxmqj
+      required:
+        - contentId
+        - receiverNickname
+        - userNickname
+        - operationExternalId
+        - donateText
+        - agentId
+        - amount
+        - paymentParams
+      properties:
+        contentId:
+          type: string
+          description: Id трансляции
+        receiverNickname:
+          type: string
+          description: Никнейм блогера (получателя доната)
+        userNickname:
+          type: string
+          description: Никнейм отправителя доната
+        operationExternalId:
+          type: string
+          description: id операции
+        donateText:
+          type: string
+          description: Текст сообщения
+        agentId:
+          type: string
+        amount:
+          minimum: 1
+          exclusiveMinimum: false
+          type: number
+          description: Сумма доната
+          example: 1200
+        callbackId:
+          type: string
+          description: 'Номер операции, по которому возможен будет опрос статуса в API в методе ()'
+        description:
+          type: string
+        paymentParams:
+          type: object
+          additionalProperties:
+            type: string
+    DonateOperationProcessingResponseDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        contentId:
+          type: string
+        receiverNickname:
+          type: string
+        userNickname:
+          type: string
+        donateWalletNumber:
+          type: integer
+          format: int64
+        externalUserId:
+          type: string
+        amount:
+          type: number
+        status:
+          type: string
+          enum:
+            - CREATED
+            - REQUEST
+            - ERROR
+            - PROCESSING
+            - COMPLETED
+            - CANCELED
+            - PARTIAL_COMPLETED
+        operationExternalId:
+          type: string
+        description:
+          type: string
+        error:
+          type: string
+        donateText:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          format: date-time
+        refillAuthorization:
+          $ref: '#/components/schemas/RefillAuthorization'
+        callbackId:
+          type: string
+      x-stoplight:
+        id: eosxmgjn67yzf
+    RefillAuthorization:
+      type: object
+      properties:
+        authType:
+          type: string
+          enum:
+            - REDIRECT
+            - PAYERCONFIRMATION
+        payerConfirmationType:
+          type: string
+          enum:
+            - NONE
+            - SMSUSSD
+            - SCANQRCODE
+        httpForm:
+          $ref: '#/components/schemas/RefillHttpForm'
+      x-stoplight:
+        id: pouu29r1hq9fw
+    RefillHttpForm:
+      type: object
+      properties:
+        action:
+          type: string
+        method:
+          type: string
+          enum:
+            - GET
+            - POST
+            - PUT
+            - DELETE
+        params:
+          type: object
+          additionalProperties:
+            type: string
+      x-stoplight:
+        id: zrpgtvkji3qyx
+    Params:
+      type: object
+      properties:
+        id:
+          type: string
+        data:
+          type: object
+          additionalProperties:
+            type: object
+        lastUsageAt:
+          type: string
+          format: date-time
+      x-stoplight:
+        id: jwkr5jt0sp7kd
+    AgentPaymentParameter:
+      required:
+        - name
+        - refillParameterName
+      type: object
+      properties:
+        name:
+          type: string
+        refillParameterName:
+          type: string
+        required:
+          type: boolean
+        min:
+          type: integer
+          format: int32
+        max:
+          type: integer
+          format: int32
+        pattern:
+          type: string
+          enum:
+            - PAN
+            - HOLDER_NAME
+            - MONTH
+            - YEAR
+            - CVV
+            - EMAIL
+            - PHONE
+            - CARD_EXPIRATION
+            - ACCOUNT
+            - TEXT
+            - TEXT_AREA
+        prefix:
+          type: string
+        bind:
+          type: boolean
+      x-stoplight:
+        id: mtd5yxnwhsvmr
+    AgentPaymentParametersGroupDTO:
+      required:
+        - name
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        paymentParameters:
+          type: array
+          items:
+            $ref: '#/components/schemas/AgentPaymentParameter'
+        mobile:
+          type: boolean
+      x-stoplight:
+        id: 5lhvfrqezl89g
+    AgentRefillTypeDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        agentGroupId:
+          type: string
+      x-stoplight:
+        id: at2pfmj58g7ou
+    Commission:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - PERCENT
+            - FIXED
+            - PERCENT_MIN
+            - PERCENT_AND_FIXED
+        value:
+          type: number
+        fixValue:
+          type: number
+      x-stoplight:
+        id: 7uyndrvi5jn0m
+    PaymentAgentDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        commission:
+          $ref: '#/components/schemas/Commission'
+        rangeAmount:
+          $ref: '#/components/schemas/RangeAmount'
+        logo:
+          type: string
+        agentRefillType:
+          $ref: '#/components/schemas/AgentRefillTypeDTO'
+        agentPaymentParametersGroup:
+          $ref: '#/components/schemas/AgentPaymentParametersGroupDTO'
+        needIdentification:
+          type: boolean
+        lower:
+          type: boolean
+        active:
+          type: boolean
+      x-stoplight:
+        id: wekvu5mal653d
+    RangeAmount:
+      required:
+        - max
+        - min
+      type: object
+      properties:
+        min:
+          type: number
+        max:
+          type: number
+      x-stoplight:
+        id: kb3nkykhfuknn
+    PublicPartnerConfigDTO:
+      required:
+        - partnerName
+      type: object
+      properties:
+        id:
+          type: string
+        partnerName:
+          type: string
+        partnerLogoKey:
+          type: string
+        partnerDesktopRedirectUrl:
+          type: string
+        partnerMobileRedirectUrl:
+          type: string
+        partnerReturnLabel:
+          type: string
+        partnerReturnButtonLabel:
+          type: string
+        refillDelayMin:
+          type: integer
+          format: int64
+      x-stoplight:
+        id: mcq9zkozlhx8r
+    Ping:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - UP
+      x-stoplight:
+        id: d6v4vqrzzms01

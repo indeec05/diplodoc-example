@@ -1,0 +1,1221 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "KycService.Public.Api",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/stop-base-request": {
+      "post": {
+        "tags": [
+          "CheckByStopBases"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.StopBaseCheking.StopBaseChekingRequestModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.StopBaseCheking.StopBaseChekingRequestModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.StopBaseCheking.StopBaseChekingRequestModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.StopBaseCheking.StopBaseChekingResponseModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.StopBaseCheking.StopBaseChekingResponseModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.StopBaseCheking.StopBaseChekingResponseModel"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stop-base-request/{stopBaseCheckingRequestId}": {
+      "get": {
+        "tags": [
+          "CheckByStopBases"
+        ],
+        "summary": "Get check by stop base request",
+        "parameters": [
+          {
+            "name": "stopBaseCheckingRequestId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.StopBaseCheking.GetStopBaseChekingResponseModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.StopBaseCheking.GetStopBaseChekingResponseModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.StopBaseCheking.GetStopBaseChekingResponseModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/generate-identification-url": {
+      "post": {
+        "tags": [
+          "GeneratePageUrl"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.IdentificationRequestDraft.GenerateIdentificationPageUrlRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.IdentificationRequestDraft.GenerateIdentificationPageUrlRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.IdentificationRequestDraft.GenerateIdentificationPageUrlRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.IdentificationRequestDraft.GeneratePageUrlResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Client Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/api/identification-methods": {
+      "get": {
+        "tags": [
+          "IdentificationMethods"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.PartnerIdentificationMethodsListItem"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.PartnerIdentificationMethodsListItem"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.PartnerIdentificationMethodsListItem"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/identification-methods/{identificationMethodId}": {
+      "get": {
+        "tags": [
+          "IdentificationMethods"
+        ],
+        "parameters": [
+          {
+            "name": "identificationMethodId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.PartnerIdentificationMethodsListItem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.PartnerIdentificationMethodsListItem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.PartnerIdentificationMethodsListItem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/identification-requests/{externalIdentificationRequestId}/by-external-id": {
+      "get": {
+        "tags": [
+          "IdentificationRequests"
+        ],
+        "summary": "Получение информации о заявке на идентификацию по внешнему ID",
+        "parameters": [
+          {
+            "name": "externalIdentificationRequestId",
+            "in": "path",
+            "description": "Внешний идентификатор заявки на идентификацию",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.IdentificationRequests.GetIdentificationRequestByExternalIdResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.IdentificationRequests.GetIdentificationRequestByExternalIdResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.IdentificationRequests.GetIdentificationRequestByExternalIdResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/identification-requests/{identificationRequestId}": {
+      "get": {
+        "tags": [
+          "IdentificationRequests"
+        ],
+        "summary": "Получение информации о заявке на идентификацию по внутреннему ID",
+        "parameters": [
+          {
+            "name": "identificationRequestId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.GetIdentificationRequestByIdResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.GetIdentificationRequestByIdResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.GetIdentificationRequestByIdResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/identification-requests/by-document-ids": {
+      "post": {
+        "tags": [
+          "IdentificationRequests"
+        ],
+        "summary": "Создать заявку на идентификацию по IDs документов",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.IdentificationRequests.CreateIdentificationRequestRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.IdentificationRequests.CreateIdentificationRequestResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.IdentificationRequests.CreateIdentificationRequestResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.IdentificationRequests.CreateIdentificationRequestResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Client Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Client Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/identification-requests/{externalIdentificationRequestId}/documents": {
+      "get": {
+        "tags": [
+          "IdentificationRequests"
+        ],
+        "summary": "Получить список документов по заявке на идентификацию",
+        "parameters": [
+          {
+            "name": "externalIdentificationRequestId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.IdentificationRequestDocuments.GetIdentificationRequestDocumentListByExternalIdItemResponse"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.IdentificationRequestDocuments.GetIdentificationRequestDocumentListByExternalIdItemResponse"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.IdentificationRequestDocuments.GetIdentificationRequestDocumentListByExternalIdItemResponse"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/identification-requests/{externalIdentificationRequestId}/documents/{documentId}": {
+      "get": {
+        "tags": [
+          "IdentificationRequests"
+        ],
+        "summary": "Получить документ по заявке на идентификацию",
+        "parameters": [
+          {
+            "name": "externalIdentificationRequestId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "documentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.IdentificationRequestDocuments.GetIdentificationRequestDocumentByExternalIdResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.IdentificationRequestDocuments.GetIdentificationRequestDocumentByExternalIdResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.IdentificationRequestDocuments.GetIdentificationRequestDocumentByExternalIdResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "KycService.Integration.Client.Http.Models.AuthenticationDetailsItem": {
+        "type": "object",
+        "properties": {
+          "method": {
+            "type": "string",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "KycService.Integration.Client.Http.Models.GetIdentificationRequestByIdResponse": {
+        "type": "object",
+        "properties": {
+          "identificationRequestId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "externalIdentificationRequestId": {
+            "type": "string",
+            "nullable": true
+          },
+          "identificationMethod": {
+            "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.IdentificationMethodItem"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "successUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "failUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "returnUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "checkByStopBase": {
+            "type": "boolean"
+          },
+          "authenticationDetails": {
+            "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.AuthenticationDetailsItem"
+          },
+          "rejectDetails": {
+            "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.RejectDetails"
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updatedOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.GetIdentificationRequestByIdResponse.StepsModel"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "KycService.Integration.Client.Http.Models.GetIdentificationRequestByIdResponse.StepsModel": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "updatedOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "KycService.Integration.Client.Http.Models.IdentificationMethodItem": {
+        "type": "object",
+        "properties": {
+          "identificationMethodId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "enabled": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "KycService.Integration.Client.Http.Models.IdentificationRequestDocuments.GetIdentificationRequestDocumentByExternalIdResponse": {
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "isVerified": {
+            "type": "boolean"
+          },
+          "expiredOn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedOn": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "KycService.Integration.Client.Http.Models.IdentificationRequestDocuments.GetIdentificationRequestDocumentListByExternalIdItemResponse": {
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "isVerified": {
+            "type": "boolean"
+          },
+          "expiredOn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedOn": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "KycService.Integration.Client.Http.Models.IdentificationRequestDraft.GenerateIdentificationPageUrlRequest": {
+        "type": "object",
+        "properties": {
+          "externalIdentificationRequestId": {
+            "type": "string",
+            "nullable": true
+          },
+          "identificationMethodIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "nullable": true
+          },
+          "checkByStopBase": {
+            "type": "boolean"
+          },
+          "successUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "failUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "KycService.Integration.Client.Http.Models.IdentificationRequestDraft.GeneratePageUrlResponse": {
+        "type": "object",
+        "properties": {
+          "pageUrl": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "KycService.Integration.Client.Http.Models.IdentificationRequests.AuthenticationDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "KycService.Integration.Client.Http.Models.IdentificationRequests.CreateIdentificationRequestRequest": {
+        "type": "object",
+        "properties": {
+          "externalIdentificationRequestId": {
+            "type": "string",
+            "nullable": true
+          },
+          "identificationMethodId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "checkByStopBase": {
+            "type": "boolean"
+          },
+          "documentIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "nullable": true
+          },
+          "returnUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "successUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "failUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "KycService.Integration.Client.Http.Models.IdentificationRequests.CreateIdentificationRequestResponse": {
+        "type": "object",
+        "properties": {
+          "identificationRequestId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "externalIdentificationRequestId": {
+            "type": "string",
+            "nullable": true
+          },
+          "authenticationDetails": {
+            "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.IdentificationRequests.AuthenticationDetails"
+          }
+        },
+        "additionalProperties": false
+      },
+      "KycService.Integration.Client.Http.Models.IdentificationRequests.GetIdentificationRequestByExternalIdResponse": {
+        "type": "object",
+        "properties": {
+          "identificationRequestId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "externalIdentificationRequestId": {
+            "type": "string",
+            "nullable": true
+          },
+          "identificationMethod": {
+            "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.IdentificationMethodItem"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "authenticationDetails": {
+            "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.AuthenticationDetailsItem"
+          },
+          "successUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "failUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "returnUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "rejectDetails": {
+            "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.RejectDetails"
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updatedOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.IdentificationRequests.GetIdentificationRequestByExternalIdResponse.StepsModel"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "KycService.Integration.Client.Http.Models.IdentificationRequests.GetIdentificationRequestByExternalIdResponse.StepsModel": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "updatedOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "KycService.Integration.Client.Http.Models.PartnerIdentificationMethodsListItem": {
+        "type": "object",
+        "properties": {
+          "identificationMethodId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "enabledOnPartner": {
+            "type": "boolean"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "requiredDocumentTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "KycService.Integration.Client.Http.Models.RejectDetails": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "KycService.Integration.Client.Http.Models.StopBaseCheking.Document": {
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentType": {
+            "type": "string",
+            "nullable": true
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.StopBaseCheking.DocumentField"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "KycService.Integration.Client.Http.Models.StopBaseCheking.DocumentField": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "KycService.Integration.Client.Http.Models.StopBaseCheking.DocumentStopBaseCheckResultModel": {
+        "type": "object",
+        "properties": {
+          "stopBaseResult": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "KycService.Integration.Client.Http.Models.StopBaseCheking.GetStopBaseChekingResponseModel": {
+        "type": "object",
+        "properties": {
+          "stopBaseResult": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.StopBaseCheking.DocumentStopBaseCheckResultModel"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "KycService.Integration.Client.Http.Models.StopBaseCheking.StopBaseChekingRequestModel": {
+        "type": "object",
+        "properties": {
+          "stopBaseChekingRequestId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.StopBaseCheking.Document"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "KycService.Integration.Client.Http.Models.StopBaseCheking.StopBaseChekingResponseModel": {
+        "type": "object",
+        "properties": {
+          "stopBaseResult": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/KycService.Integration.Client.Http.Models.StopBaseCheking.DocumentStopBaseCheckResultModel"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Microsoft.AspNetCore.Mvc.ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
+      }
+    }
+  }
+}

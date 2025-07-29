@@ -1,0 +1,10 @@
+title: Hermes public API
+href: index.yaml
+items:
+  - name: openapi-yaml
+    include:
+      path: openapi
+      includers:
+        - name: openapi
+          input: ru/hermes/hermes.json
+      mode: link

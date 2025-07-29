@@ -1,0 +1,5 @@
+title: KYC2 способы проверки
+href: index.yaml
+items:
+  - name: МТС
+    href: mts.md

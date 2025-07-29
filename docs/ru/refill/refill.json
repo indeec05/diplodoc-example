@@ -1,0 +1,1617 @@
+{
+    "openapi": "3.0.1",
+    "x-stoplight": {
+        "id": "syoj9479hp2rs"
+    },
+    "info": {
+        "title": "WalletOne.Refill.Partner.Api",
+        "version": "3.0.0",
+        "description": "**Общее описание**\r\n\r\nДанный документ представляет собой описание протокола, предназначенного для интеграции партнёра с системой Refill Service.\r\nОбщее описание проекта:\r\n\r\nRefill service является компонентом, взаимодействия внешних и внутренних партнёрских приложений с сервисами для проведения платежей, через сторонних агентов\r\n\r\nОсновные функции данного компонента:\r\n\r\n- унификация различных агентских протоколов, в рамках единого партнёрсокго протокола\r\n- проведения операций списания денежных средств с платёжных инструментов, путём интеграционного взаимодействия с платёжными агентами.\r\n- взаимодействие с другими компонентами ГК Wallet One для осуществление процесса проведения платежей\r\n- формирования реестров. для отражения данных операций в виде банковских транзакций.\r\n\r\n**Авторизация запросов**\r\n\r\nАвторизация платежа осуществляется при помощи параметра ApiKey\r\n\r\n**Обработка ошибок**\r\n\r\nОшибки возвращаются в HTTP-статусе кодом 4xx и 5xx, согласно RFC 2616. В ответе может содержаться объект detail, содержащий дополнительную информацию об ошибке.\r\nПример структуры ошибки:\r\n\r\n```json\r\n{\r\n    \"title\": \"refill partner api error\",\r\n    \"status\": 409,\r\n    \"detail\": \"error Response status code does not indicate success: 409 (Conflict)., content: {\\\"title\\\":\\\"refill api error\\\",\\\"status\\\":409,\\\"detail\\\":\\\"payment duplicate paymentId: 12c726dc-d99b-4e63-875a-9578ac4549ea, partnerId: 60d06446-41fa-43b9-aa70-cd20ccf158e5, partnerPaymentId: 1124124124124124124124111121231231112111311111111111111111121512151511111141111111111111111\\\",\\\"instance\\\":\\\"POST /api/payments\\\",\\\"error\\\":\\\"payment_duplicate\\\",\\\"paymentId\\\":\\\"12c726dc-d99b-4e63-875a-9578ac4549ea\\\",\\\"partnerId\\\":\\\"60d06446-41fa-43b9-aa70-cd20ccf158e5\\\",\\\"partnerPaymentId\\\":\\\"1124124124124124124124111121231231112111311111111111111111121512151511111141111111111111111\\\"}\",\r\n    \"instance\": \"POST /api/payments\"\r\n}\r\n```\r\n\r\n",
+        "contact": {
+            "name": ""
+        }
+    },
+    "paths": {
+        "/api/binds": {
+            "post": {
+                "tags": [
+                    "Binds"
+                ],
+                "summary": "Создать привязку.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BindRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "```json\r\n{\r\n  \"partnerBindId\": \"12312312311211\",\r\n  \"bindId\": \"5bc6a992-8e8d-4ac0-be10-ea55338e9328\",\r\n  \"channelBindId\": \"03be6fb5-4a06-7513-ad09-3711021127c4\",\r\n  \"confirmation\": {\r\n    \"confirmType\": \"qr\",\r\n    \"actions\": [\r\n      {\r\n        \"url\": \"https://sub.nspk.ru/210ea006fe994e37ae8e0cf6aa2225e9\",\r\n        \"method\": \"GET\"\r\n      }\r\n    ]\r\n  },\r\n  \"channelBindProperties\": {}\r\n}\r\n```",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BindResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-stoplight": {
+                    "id": "d9h60gc6fme0k"
+                },
+                "description": "Метод позволяет создать реккурентную привязку, без оплаты, по которой, в последующем можно\r\nпроизводить оплату.\r\n\r\nРекуррентные операции позволяют интернет-магазину производить списание средств с банковских карт своих плательщиков без повторного запроса ввода реквизитов карты, и подтверждения.\r\n\r\nДля возможности проведения рекуррентного платежа необходимо вначале сохранить и привязать платежный инструмент, это происходит в момент оплаты при передаче соответствующих параметров, либо в рамках отдельного запроса.\r\nПо факту исполнения привязки, в ответе, будет передана инструкция по редиректу пользователя, для выполннеения необходимых для привязки действий.\r\n\r\n- По карточным операциям: транслируется инструкция для подтверждения 3DS.\r\n- По операциям СБП: транслируется QR код, отсканировав который, пользователь подтвердит привязку.\r\n\r\nПосле того, как пользователь совершит необходимые действия, будет сформирован\r\nассинхронный каллбек, на Ваш каллбек URL. Описание ответа содержится в [Swagger](http://10.203.148.11:5020/index.html)\r\n"
+            }
+        },
+        "/api/binds/{partnerBindId}": {
+            "get": {
+                "tags": [
+                    "Binds"
+                ],
+                "summary": "Получить привязку.",
+                "parameters": [
+                    {
+                        "name": "partnerBindId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetBindResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-stoplight": {
+                    "id": "edtiakoe6nlk8"
+                },
+                "description": "Метод предназначен для получения информации о созданной ранее вривязке."
+            },
+            "delete": {
+                "tags": [
+                    "Binds"
+                ],
+                "summary": "Отменить привязку.",
+                "parameters": [
+                    {
+                        "name": "partnerBindId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-stoplight": {
+                    "id": "pfdt89xlz2xng"
+                },
+                "description": "Удаляет созданную ранее привязку, выполняя запрос к платёжному агенту, для отмены привязки"
+            }
+        },
+        "/api/merchants/{partnerMerchantId}": {
+            "get": {
+                "tags": [
+                    "Merchants"
+                ],
+                "summary": "Получить мерчанта.",
+                "parameters": [
+                    {
+                        "name": "partnerMerchantId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetMerchantResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-stoplight": {
+                    "id": "1q3ym3cz3yy19"
+                },
+                "description": "Метод возвращает информацию о созданном ранее мерчанте. \r\nМетод необходим, для получения информации о настройках мерчанта."
+            }
+        },
+        "/api/payments": {
+            "post": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Создать платеж.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreatePaymentRequest"
+                            }
+                        }
+                    },
+                    "description": "```json\r\n{\r\n  \"amount\": {\r\n    \"currency\": 643,\r\n    \"value\": 10\r\n  },\r\n  \"auth\": {\r\n    \"card\": {\r\n      \"cvv\": \"123\",\r\n      \"expireMonth\": \"12\",\r\n      \"expireYear\": \"2026\",\r\n      \"holder\": \"INSTANT CARD\",\r\n      \"pan\": \"2201382000000047\"\r\n    }\r\n  },\r\n  \"partnerMerchantId\": \"JOoXZfSajACyYqqxdjImfesNBxY\",\r\n  \"partnerPaymentId\": \"112412412412412412412411112123123111121113111111111111111112151215115111141111111111111111111111\",\r\n  \"paymentTool\": \"card\",\r\n  \"redirect\": {\r\n    \"failUrl\": \"http://localhost:8000/1\",\r\n    \"successUrl\": \"http://localhost:8000/2\"\r\n  },\r\n  \"description\": \"123\"\r\n}\r\n```\r\n"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Система возвращает успешный ответ, с инструкцией по выполнению операции.\r\nФормат инструкции зависит от используемого параметра confirmType.\r\n\r\n\r\n```json\r\n{\r\n    \"partnerPaymentId\": \"11241241241241241241241111212312311121111311111111111111111121512151511111141111111111111111\",\r\n    \"paymentId\": \"7dda83f2-c6c4-4343-a118-cd6c6690e8cf\",\r\n    \"channelPaymentId\": \"5d027262-e083-5f43-1dfa-0530625bdaf4\",\r\n    \"state\": \"confirmationWaiting\",\r\n    \"stateDescription\": \"\",\r\n    \"confirmation\": {\r\n        \"confirmType\": \"redirect\",\r\n        \"actions\": [\r\n            {\r\n                \"url\": \"https://refill2-dev.w1.money/service/dev/3ds/7dda83f2-c6c4-4343-a118-cd6c6690e8cf/auth\",\r\n                \"method\": \"POST\",\r\n                \"params\": {\r\n                    \"threeDSServerTransID\": \"b42ba8cb-dc56-43f4-898a-12ecf2cc2eef\",\r\n                    \"threeDSMethodURL\": \"https://acs.payments.sberbank.ru/acs/method\"\r\n                }\r\n            }\r\n        ]\r\n    },\r\n    \"merchantCommission\": 0,\r\n    \"payerCommission\": 0\r\n}\r\n```\r\n\r\n\r\nПараметр **ConfirmType**\r\n\r\nМожет принимать следующие значения:\r\n\r\n\r\nЗначение параметра | Column B \r\n---------|----------|\r\n sms | Подтверждение СМС сообщением от мобильного оператора Необходимо ожидать каллбек об успешной оплате | C1\r\n redirect | Подтверждение через редирект\r\n qr | Пользователю нужно отразить QR, который он отсканирует",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreatePaymentResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "При данном коде ответа транслируются ошибки валидации запроса\r\n```json\r\n{\r\n    \"type\": \"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\r\n    \"title\": \"One or more validation errors occurred.\",\r\n    \"status\": 400,\r\n    \"errors\": {\r\n        \"$\": [\r\n            \"'1' is an invalid start of a property name. Expected a '\\\"'. Path: $ | LineNumber: 20 | BytePositionInLine: 4.\"\r\n        ],\r\n        \"request\": [\r\n            \"The request field is required.\"\r\n        ]\r\n    },\r\n    \"traceId\": \"00-db0da9dfd54d7fbf52496001a206f6a2-1e08962b82b816c2-01\"\r\n}\r\n```",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Транслируются бизнес-функциональные ошибки запроса\r\n```json\r\n{\r\n    \"title\": \"refill partner api error\",\r\n    \"status\": 409,\r\n    \"detail\": \"error Response status code does not indicate success: 409 (Conflict)., content: {\\\"title\\\":\\\"refill api error\\\",\\\"status\\\":409,\\\"detail\\\":\\\"payment duplicate paymentId: 9f9e8910-c1c4-43a2-aa98-b1419302efab, partnerId: 60d06446-41fa-43b9-aa70-cd20ccf158e5, partnerPaymentId: 112412412412412412412411112123123111121113111111111111111112151215115111141111111111111111111111\\\",\\\"instance\\\":\\\"POST /api/payments\\\",\\\"error\\\":\\\"payment_duplicate\\\",\\\"paymentId\\\":\\\"9f9e8910-c1c4-43a2-aa98-b1419302efab\\\",\\\"partnerId\\\":\\\"60d06446-41fa-43b9-aa70-cd20ccf158e5\\\",\\\"partnerPaymentId\\\":\\\"112412412412412412412411112123123111121113111111111111111112151215115111141111111111111111111111\\\"}\",\r\n    \"instance\": \"POST /api/payments\"\r\n}\r\n```",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-stoplight": {
+                    "id": "rs8vzplwrudm4"
+                },
+                "description": "Метод осуществляет проведение агентского платежа.\r\n\r\nПроцесс провдения одностадийного платежа состоит из следующих шагов:\r\n\r\n1. Сформировать запрос на оплату\r\n2. Обработать ответ на запрос, выполнить необходимые действия для подтверждения платежа\r\n3. Обработать каллбек, о статусе операции, либо переопросить статус\r\n\r\n**Структура запроса отличиается от выбора платёжного инструмента:**\r\n\r\nСпособ оплаты paymentTool | Значение параметра auth  | Описание\r\n---------|----------|---------\r\n card | card/token | Транслируется номер банковской карты, CVC, срок действия карты. При оплате с последующей привязкой платёжного инструмента используется параметр token, в формате: token:\"partnerBindId:string\" \r\n mobile | phone | Транслируется номер телефона\r\n c2b_sbp | -/token | Для способа оплаты СБП не требуется передача платёжного инструмента, поэтому транслируется пустой объект \"auth\": {} При оплате с последующей привязкой платёжного инструмента используется параметр token, в формате: token:\"partnerBindId:string\"\r\n sberpay | phone | Транслируется номер телефона в качестве логина\r\n yoo_money | phone | Для этого способа олаты используется номер телефона в качестве логина\r\n tinkoff_invoicing| phone | Для этого способа олаты используется номер телефона в качестве логина\r\n\r\n\r\n**Двустадийная оплата**\r\n\r\nПред-авторизация платежа позволяет интернет магазину самому принимать решение о списание денежных средств с платежного инструмента пользователя, что позволяет избежать дополнительных расходов в случае отказа от услуги или невозможности ее предоставления по каким либо причинам. Другими словами в момент оплаты счета средства на карте пользователя не списываются, а холдируются.\r\n\r\nДанный сценарии не сильно отличается от сценариев оплаты платёжным инструментом описанных, выше:\r\n\r\nВ запросе **/api/payments** необходимо передать параметр **WithHold** со значением **true**. При успешном выполнении операции денежные средства будут захолдированы на платёжном инструменте клиента.\r\n\r\nПосле успешного выполнения операции **/api/payments**, в зависимости от условия выполнения заказа, необходимо:\r\n\r\n1. либо выполнить метод **/api/payments/{partnerPaymentId}/accept**, в данном случае операция примет конечный успешный статус, произойдёт списание с платёжного инструмента.\r\n2. либо метод метод **/api/payments/{partnerPaymentId}/reject**, в данном случае будет произведено расхолдирование денежных средств на платёжном инструменте\r\n\r\n\r\n**Обработка каллбека**\r\n\r\nПо факту успешного выполнения операции будет сформирован ассинхронный каллбек на CallbackUrl, установленный в рамках партнёра.\r\n\r\n\r\nВ поле type транслируется одно из значений - **\"payment\", \"refund\", \"bind\"**\r\nВ зависимости от этого значения структура каллбека будет отличаться:\r\n\r\nСтруктура каллбека с типом **payment**\r\n\r\n```json\r\n\"type\": \"payment\",\r\n  \"payment\": {\r\n    \"paymentId\": \"string\",\r\n    \"partnerPaymentId\": \"string\",\r\n    \"paymentState\": \"string\",\r\n    \"stateDescription\": \"string\",\r\n    \"paid\": 0\r\n  }\r\n```\r\n\r\nСтруктура каллбека с типом **refund**\r\n\r\n```json\r\n \"refund\": {\r\n    \"refundId\": \"string\",\r\n    \"partnerRefundId\": \"string\",\r\n    \"paymentId\": \"string\",\r\n    \"partnerPaymentId\": \"string\",\r\n    \"refundNumber\": 0,\r\n    \"refundState\": \"string\",\r\n    \"stateDescription\": \"string\",\r\n    \"refunded\": 0\r\n  }\r\n```\r\n\r\n  Структура каллбека для запросов *Bind*:\r\n\r\n```json\r\n    \"bind\": {\r\n    \"bindId\": \"string\",\r\n    \"partnerBindId\": \"string\",\r\n    \"isActive\": true\r\n  }\r\n}\r\n```\r\n\r\n**Пример скрипта Python, формирующего запрос, и направляющего на страницу с вводом 3DS кода:**\r\n```python\r\nimport requests\r\nimport uuid\r\nimport webbrowser\r\nfrom urllib.parse import urlencode\r\n\r\n# Функция для отправки POST-запроса и обработки ответа\r\ndef create_payment_request():\r\n    # URL для отправки запроса\r\n    url = \"http://10.203.148.11:5012/api/payments\"\r\n    \r\n    # Заголовки запроса\r\n    headers = {\r\n        \"Content-Type\": \"application/json\",\r\n        \"Accept\": \"application/json\",\r\n        \"ApiKey\": \"testpartner.3YrQlwYnTcZUljVIi9FsxjuJiocj4Fyf\"\r\n    }\r\n    \r\n    # Генерация уникального GUID для partnerPaymentId\r\n    partner_payment_id = str(uuid.uuid4())\r\n    \r\n    # Тело запроса\r\n    payload = {\r\n        \"amount\": {\r\n            \"currency\": 643,\r\n            \"value\": 10\r\n        },\r\n        \"auth\": {\r\n            \"card\": {\r\n                \"cvv\": \"123\",\r\n                \"expireMonth\": \"12\",\r\n                \"expireYear\": \"2026\",\r\n                \"holder\": \"INSTANT CARD\",\r\n                \"pan\": \"2201382000000047\"\r\n            }\r\n        },\r\n        \"partnerMerchantId\": \"Тест мерч\",\r\n        \"partnerPaymentId\": partner_payment_id,\r\n        \"paymentTool\": \"card\",\r\n        \"redirect\": {\r\n            \"failUrl\": \"http://localhost:8000/1\",\r\n            \"successUrl\": \"http://localhost:8000/2\"\r\n        },\r\n        \"description\": \"123\"\r\n    }\r\n    \r\n    # Отправка POST-запроса\r\n    response = requests.post(url, json=payload, headers=headers)\r\n    \r\n    # Проверка статуса ответа\r\n    if response.status_code == 200:\r\n        # Парсинг JSON-ответа\r\n        response_data = response.json()\r\n        \r\n        # Извлечение данных из ответа\r\n        payment_id = response_data.get(\"paymentId\")\r\n        partner_payment_id = response_data.get(\"partnerPaymentId\")\r\n        confirm_type = response_data.get(\"confirmation\", {}).get(\"confirmType\")\r\n        actions = response_data.get(\"confirmation\", {}).get(\"actions\", [])\r\n        channel_payment_id = response_data.get(\"channelPaymentId\")\r\n        \r\n        print(f\"Payment ID: {payment_id}\")\r\n        print(f\"Partner Payment ID: {partner_payment_id}\")\r\n        print(f\"Channel Payment ID: {channel_payment_id}\")\r\n        print(f\"Confirmation Type: {confirm_type}\")\r\n        \r\n        # Обработка редиректа\r\n        if confirm_type == \"redirect\" and actions:\r\n            redirect_url = actions[0].get(\"url\")\r\n            redirect_method = actions[0].get(\"method\")\r\n            \r\n            print(f\"Redirect URL: {redirect_url}\")\r\n            print(f\"Redirect Method: {redirect_method}\")\r\n            \r\n            # Формирование HTML-формы для редиректа\r\n            html_form = f\"\"\"\r\n            <!DOCTYPE html>\r\n            <html lang=\"en\">\r\n            <head>\r\n                <meta charset=\"UTF-8\">\r\n                <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n                <title>3DS Redirect</title>\r\n                <script>\r\n                    window.onload = function() {{\r\n                        document.getElementById('redirectForm').submit();\r\n                    }};\r\n                </script>\r\n            </head>\r\n            <body>\r\n                <h1>Redirecting to 3DS verification...</h1>\r\n                <form id=\"redirectForm\" action=\"{redirect_url}\" method=\"{redirect_method}\">\r\n                    <input type=\"hidden\" name=\"channelPaymentId\" value=\"{channel_payment_id}\" />\r\n                </form>\r\n            </body>\r\n            </html>\r\n            \"\"\"\r\n            \r\n            # Сохранение HTML-формы во временный файл\r\n            with open(\"redirect.html\", \"w\", encoding=\"utf-8\") as file:\r\n                file.write(html_form)\r\n            \r\n            # Открытие файла в браузере\r\n            webbrowser.open(\"redirect.html\")\r\n        else:\r\n            print(\"No redirect information found in the response.\")\r\n    else:\r\n        print(f\"Error: Unable to process request. Status code: {response.status_code}\")\r\n        print(response.text)\r\n\r\n# Вызов функции\r\ncreate_payment_request()\r\n```\r\n**Пример реализации скрипта на Python, обрабатывающего полученный каллбек:**\r\n\r\n```python\r\nfrom flask import Flask, request, jsonify\r\nimport logging\r\nimport sys\r\nimport json\r\n\r\napp = Flask(name)\r\n\r\nlogging.basicConfig(\r\n    level=logging.INFO,\r\n    format='%(asctime)s - %(levelname)s - %(message)s',\r\n    stream=sys.stdout\r\n)\r\nlogger = logging.getLogger(name)\r\n\r\n@app.route('/webhook', methods=['POST'])\r\ndef handle_webhook():\r\n    try:\r\n        data = request.get_json()\r\n        if not data:\r\n            logger.error(\"No JSON data received\")\r\n            return jsonify({\"error\": \"No JSON data provided\"}), 400\r\n\r\n        logger.info(f\"Received webhook request: {json.dumps(data, indent=2)}\")\r\n        \r\n        event_type = data.get(\"type\", \"unknown\")\r\n        payment_id = data.get(\"payment\", {}).get(\"paymentId\", \"unknown\")\r\n        refund_id = data.get(\"refund\", {}).get(\"refundId\", \"unknown\")\r\n        bind_id = data.get(\"bind\", {}).get(\"bindId\", \"unknown\")\r\n\r\n        logger.info(f\"Webhook triggered: type={event_type}, paymentId={payment_id}, refundId={refund_id}, bindId={bind_id}\")\r\n        \r\n        return jsonify({\"status\": \"success\"}), 200\r\n    except Exception as e:\r\n        logger.error(f\"Error processing webhook: {str(e)}\")\r\n        return jsonify({\"error\": \"Internal server error\"}), 500\r\n\r\nif name == 'main':\r\n    app.run(host='0.0.0.0', port=5000, debug=False)\r\n```\r\n\r\n"
+            }
+        },
+        "/api/payments/{partnerPaymentId}": {
+            "get": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Получить платеж.",
+                "parameters": [
+                    {
+                        "name": "partnerPaymentId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetPaymentResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-stoplight": {
+                    "id": "crhwbiigykjo2"
+                },
+                "description": "Метод выполняется для получения статуса по ранее созданному платежу.\r\nПомимо ожидания ассинхронного каллбека, партнёр может опрашивать статус платежа "
+            }
+        },
+        "/api/payments/{partnerPaymentId}/refunds": {
+            "get": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Получить возвраты по платежу.",
+                "parameters": [
+                    {
+                        "name": "partnerPaymentId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/GetRefundResponse"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-stoplight": {
+                    "id": "i3xxohn534y2n"
+                },
+                "description": "Метод позволяет получить все созданные рефанды в рамках одного платежа.\r\nДанный метод необходим, в случае проведения частичных возвратов "
+            }
+        },
+        "/api/payments/{partnerPaymentId}/accept": {
+            "put": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Подтвердить проведение двухстадийного платежа.",
+                "parameters": [
+                    {
+                        "name": "partnerPaymentId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AcceptPaymentRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AcceptPaymentResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-stoplight": {
+                    "id": "dx89m940fbxmy"
+                },
+                "description": "Метод для подтверждения двустадийной оплаты. \r\nВ результате выполнения снимается холд с платёжного инструмента, происходит списание денежных средств.\r\n"
+            }
+        },
+        "/api/payments/{partnerPaymentId}/reject": {
+            "put": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Отклонить проведение двухстадийного платежа.",
+                "parameters": [
+                    {
+                        "name": "partnerPaymentId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RejectPaymentResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-stoplight": {
+                    "id": "bbejtzexb66iq"
+                },
+                "description": "Метод необходим чтобы отменить холдирование денежных средств на платёжном инструменте клиента."
+            }
+        },
+        "/api/refunds": {
+            "post": {
+                "tags": [
+                    "Refunds"
+                ],
+                "summary": "Создать возврат.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateRefundRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "```json\r\n{\r\n  \"partnerRefundId\": \"12312312312\",\r\n  \"refundId\": \"b846243c-ff1c-4025-9227-c8e9b281bbb0\",\r\n  \"channelRefundId\": \"505010892485\",\r\n  \"partnerPaymentId\": \"247e2c32-a476-4b2c-b71d-92d2f5deea94\",\r\n  \"paymentId\": \"12df9663-db06-40c7-84af-2d17cbbdf195\",\r\n  \"state\": \"success\"\r\n}\r\n```",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateRefundResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found\r\n\r\n```json\r\n{\r\n  \"title\": \"refill partner api error\",\r\n  \"status\": 404,\r\n  \"detail\": \"error Response status code does not indicate success: 404 (Not Found)., content: {\\\"title\\\":\\\"refill api error\\\",\\\"status\\\":404,\\\"detail\\\":\\\"payment not found partnerId: 60d06446-41fa-43b9-aa70-cd20ccf158e5, partnerPaymentId: 247e2c32-a476-4b2c-b71d-92d2f5deea941\\\",\\\"instance\\\":\\\"POST /api/refunds\\\",\\\"error\\\":\\\"payment_not_found\\\",\\\"partnerId\\\":\\\"60d06446-41fa-43b9-aa70-cd20ccf158e5\\\",\\\"partnerPaymentId\\\":\\\"247e2c32-a476-4b2c-b71d-92d2f5deea941\\\"}\",\r\n  \"instance\": \"POST /api/refunds\"\r\n}\r\n```",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "```json\r\n{\r\n  \"title\": \"refill partner api error\",\r\n  \"status\": 409,\r\n  \"detail\": \"error Response status code does not indicate success: 409 (Conflict)., content: {\\\"title\\\":\\\"refill api error\\\",\\\"status\\\":409,\\\"detail\\\":\\\"payment paymentId: 12df9663-db06-40c7-84af-2d17cbbdf195 can't refund refundId: 91a83e14-9bd6-4962-8d36-d5a99dee4d2a , because refundAmount: 10 above availableForRefund: 0\\\",\\\"instance\\\":\\\"POST /api/refunds\\\",\\\"error\\\":\\\"payment_cant_refund_invalid_amount\\\",\\\"refundId\\\":\\\"91a83e14-9bd6-4962-8d36-d5a99dee4d2a\\\",\\\"paymentId\\\":\\\"12df9663-db06-40c7-84af-2d17cbbdf195\\\",\\\"refundAmount\\\":\\\"10\\\",\\\"availableForRefund\\\":\\\"0\\\"}\",\r\n  \"instance\": \"POST /api/refunds\"\r\n}\r\n```"
+                    }
+                },
+                "x-stoplight": {
+                    "id": "d5u5z4eozom2b"
+                },
+                "description": "Метод осуществляет нативный возврат операции.\r\nДанное API позволяет интернет магазинам осуществлять возвраты, по ранее оплаченным платежам. Чтобы осуществить возврат по конкретному платежу, данный платеж должен находиться в статусе Paid и шлюз, через который прошел платеж, должен поддерживать данный функционал, на данный момент не все шлюзы поддерживают возвраты.\r\n\r\nВозвраты - асинхронная операция и состоит из двух этапов:\r\n\r\n1. создание запроса на осуществление возврата по указанному платежу,\r\n2. получение статуса запроса на осуществление возврата по указанному платежу, либо обработка ассинхронного каллбека\r\n\r\nВ процессе обработки запроса на возврат по платежу, Refund изменяет свой статус до получения конечного, при этом могут возникнуть ошибки и по инициативе интернет магазина запрос можно повторить.\r\n\r\nВозвраты могут принимать слудующие статусы:\r\n\r\nСтатус | Описание \r\n---------|----------\r\n None 0 | Запрос принят, возврат создан, обработка пока не началась, статус не известен\r\n Processing 1| В процессе отмены \r\n Success 2 | Отмена успешно выполнена \r\n Error 4 | Ошибка в процессе отмены \r\n\r\nНе допускается повторная отправка запроса, если по указанному платежу ранее был создан Refund и он находится в следующих статусах (None, Processing, Success). В случае отправки запроса будет возвращена ошибка.\r\n\r\nДля осуществления частичных возвратов нужно передать значение ammount с нужной суммой, меньшей суммы основного платежа"
+            }
+        },
+        "/api/refunds/{partnerRefundId}": {
+            "get": {
+                "tags": [
+                    "Refunds"
+                ],
+                "summary": "Получить возврат.",
+                "parameters": [
+                    {
+                        "name": "partnerRefundId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "```json\r\n{\r\n  \"partnerRefundId\": \"12312312312\",\r\n  \"refundId\": \"b846243c-ff1c-4025-9227-c8e9b281bbb0\",\r\n  \"channelRefundId\": \"505010892485\",\r\n  \"partnerPaymentId\": \"247e2c32-a476-4b2c-b71d-92d2f5deea94\",\r\n  \"paymentId\": \"12df9663-db06-40c7-84af-2d17cbbdf195\",\r\n  \"state\": \"success\",\r\n  \"refundNumber\": 0,\r\n  \"amount\": 10,\r\n  \"description\": \"Тестовый возврат\",\r\n  \"created\": \"2025-02-19T10:55:50.32983+00:00\",\r\n  \"modified\": \"2025-02-19T10:55:51.217443+00:00\"\r\n}\r\n```",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetRefundResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "```json\r\n{\r\n  \"title\": \"refill partner api error\",\r\n  \"status\": 404,\r\n  \"detail\": \"error Response status code does not indicate success: 404 (Not Found)., content: {\\\"title\\\":\\\"refill api error\\\",\\\"status\\\":404,\\\"detail\\\":\\\"refund not found partnerRefundId: 123123123121\\\",\\\"instance\\\":\\\"GET /api/refunds/60d06446-41fa-43b9-aa70-cd20ccf158e5/123123123121\\\",\\\"error\\\":\\\"refund_not_found\\\",\\\"partnerRefundId\\\":\\\"123123123121\\\"}\",\r\n  \"instance\": \"GET /api/refunds/123123123121\"\r\n}\r\n```",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetails"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-stoplight": {
+                    "id": "bjbee75ed5651"
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AcceptPaymentRequest": {
+                "required": [
+                    "amount"
+                ],
+                "type": "object",
+                "properties": {
+                    "amount": {
+                        "type": "number",
+                        "description": "Сумма на которую акцептуется платеж.",
+                        "format": "double"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Описание акцепта.",
+                        "default": "тестовый акцепт",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "x-stoplight": {
+                    "id": "xztom35camajx"
+                }
+            },
+            "AcceptPaymentResponse": {
+                "required": [
+                    "acceptId",
+                    "created",
+                    "partnerPaymentId",
+                    "paymentId",
+                    "state"
+                ],
+                "type": "object",
+                "properties": {
+                    "acceptId": {
+                        "type": "string",
+                        "description": "Идентификатор операции accept в refill-service.",
+                        "format": "uuid"
+                    },
+                    "partnerPaymentId": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Идентификатор платежа на стороне партнера."
+                    },
+                    "paymentId": {
+                        "type": "string",
+                        "description": "Идентификатор платежа в refill-service.",
+                        "format": "uuid"
+                    },
+                    "state": {
+                        "$ref": "#/components/schemas/OperationState"
+                    },
+                    "stateDescription": {
+                        "type": "string",
+                        "description": "Описание статуса операции accept.",
+                        "nullable": true
+                    },
+                    "created": {
+                        "type": "string",
+                        "description": "Дата создания операции accept в refill-service.",
+                        "format": "date-time"
+                    }
+                },
+                "additionalProperties": false,
+                "x-stoplight": {
+                    "id": "rvkuv0kiy245l"
+                }
+            },
+            "Amount": {
+                "required": [
+                    "currency",
+                    "value"
+                ],
+                "type": "object",
+                "properties": {
+                    "currency": {
+                        "type": "integer",
+                        "description": "Валюта.",
+                        "format": "int32",
+                        "default": 643
+                    },
+                    "value": {
+                        "type": "number",
+                        "description": "Сумма.",
+                        "format": "double",
+                        "default": 0
+                    }
+                },
+                "additionalProperties": false,
+                "x-stoplight": {
+                    "id": "fnlneyybp3bca"
+                }
+            },
+            "AuthData": {
+                "type": "object",
+                "properties": {
+                    "card": {
+                        "$ref": "#/components/schemas/CardData"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "description": "Телефон в формете +7xxxxxxxxxx",
+                        "default": "+70000000000",
+                        "nullable": true
+                    },
+                    "login": {
+                        "type": "string",
+                        "description": "Логин",
+                        "default": "any login",
+                        "nullable": true
+                    },
+                    "token": {
+                        "type": "string",
+                        "description": "Токен",
+                        "default": "any token",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "x-stoplight": {
+                    "id": "f21n73k61ul9y"
+                }
+            },
+            "BindRequest": {
+                "required": [
+                    "amount",
+                    "auth",
+                    "partnerBindId",
+                    "partnerMerchantId",
+                    "paymentTool",
+                    "redirect"
+                ],
+                "type": "object",
+                "properties": {
+                    "partnerBindId": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Идентификатор привязки на стороне партнера.",
+                        "default": "PartnerBindId"
+                    },
+                    "partnerMerchantId": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Идентификатор мерчанта на стороне партнера.",
+                        "default": "PartnerMerchantId"
+                    },
+                    "amount": {
+                        "$ref": "#/components/schemas/Amount"
+                    },
+                    "paymentTool": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Платежный инструмент.",
+                        "default": "card"
+                    },
+                    "auth": {
+                        "$ref": "#/components/schemas/AuthData"
+                    },
+                    "redirect": {
+                        "$ref": "#/components/schemas/Redirect"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Описание привязки.",
+                        "default": "тестовая привязка",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "x-stoplight": {
+                    "id": "l2ii1kkhso1kr"
+                }
+            },
+            "BindResponse": {
+                "required": [
+                    "bindId",
+                    "channelBindId",
+                    "channelBindProperties",
+                    "confirmation",
+                    "partnerBindId"
+                ],
+                "type": "object",
+                "properties": {
+                    "partnerBindId": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Идентификатор привязки на стороне партнера."
+                    },
+                    "bindId": {
+                        "type": "string",
+                        "description": "Идентификатор привязки в refill-service.",
+                        "format": "uuid"
+                    },
+                    "channelBindId": {
+                        "type": "string",
+                        "description": "Идентификатор привязки на стороне агентского канала.",
+                        "nullable": true
+                    },
+                    "confirmation": {
+                        "$ref": "#/components/schemas/Confirmation"
+                    },
+                    "channelBindProperties": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "description": "Дополнительные данные привязки на стороне агентского канала.",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "x-stoplight": {
+                    "id": "k1bpyt34a9eyp"
+                }
+            },
+            "CardData": {
+                "required": [
+                    "cvv",
+                    "expireMonth",
+                    "expireYear",
+                    "holder",
+                    "pan"
+                ],
+                "type": "object",
+                "properties": {
+                    "pan": {
+                        "minLength": 1,
+                        "type": "string",
+                        "default": "4111111111111111"
+                    },
+                    "cvv": {
+                        "minLength": 1,
+                        "type": "string",
+                        "default": "123"
+                    },
+                    "holder": {
+                        "minLength": 1,
+                        "type": "string",
+                        "default": "Тест"
+                    },
+                    "expireYear": {
+                        "type": "integer",
+                        "format": "int32",
+                        "default": 25
+                    },
+                    "expireMonth": {
+                        "type": "integer",
+                        "format": "int32",
+                        "default": 12
+                    }
+                },
+                "additionalProperties": false,
+                "x-stoplight": {
+                    "id": "9fy7zlmj4j3l6"
+                }
+            },
+            "ConfirmPaymentRequest": {
+                "required": [
+                    "code"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Код подтверждения платежа."
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Описание подтверждения.",
+                        "default": "тестовое подтверждение",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "x-stoplight": {
+                    "id": "hbrdehie6zw2v"
+                }
+            },
+            "ConfirmPaymentResponse": {
+                "required": [
+                    "confirmId",
+                    "created",
+                    "partnerPaymentId",
+                    "paymentId",
+                    "state"
+                ],
+                "type": "object",
+                "properties": {
+                    "confirmId": {
+                        "type": "string",
+                        "description": "Идентификатор операциии confirm в refill-service.",
+                        "format": "uuid"
+                    },
+                    "partnerPaymentId": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Идентификатор платежа на стороне партнера."
+                    },
+                    "paymentId": {
+                        "type": "string",
+                        "description": "Идентификатор платежа в refill-service.",
+                        "format": "uuid"
+                    },
+                    "state": {
+                        "$ref": "#/components/schemas/OperationState"
+                    },
+                    "stateDescription": {
+                        "type": "string",
+                        "description": "Описание статуса операции confirm.",
+                        "nullable": true
+                    },
+                    "created": {
+                        "type": "string",
+                        "description": "Дата создания операции confirm в refill-service.",
+                        "format": "date-time"
+                    }
+                },
+                "additionalProperties": false,
+                "x-stoplight": {
+                    "id": "u4bnhapq1zhkq"
+                }
+            },
+            "Confirmation": {
+                "required": [
+                    "confirmType"
+                ],
+                "type": "object",
+                "properties": {
+                    "confirmType": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Тип подверждения."
+                    },
+                    "actions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/HttpAction"
+                        },
+                        "description": "Действия для подтверждения.",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "x-stoplight": {
+                    "id": "undm64tyev4de"
+                }
+            },
+            "CreatePaymentRequest": {
+                "required": [
+                    "amount",
+                    "auth",
+                    "partnerMerchantId",
+                    "partnerPaymentId",
+                    "paymentTool"
+                ],
+                "type": "object",
+                "properties": {
+                    "partnerPaymentId": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Идентификатор платежа на стороне партнера.",
+                        "default": "PartnerPaymentId"
+                    },
+                    "partnerMerchantId": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Идентификатор мерчанта на стороне партнера.",
+                        "default": "PartnerMerchantId"
+                    },
+                    "amount": {
+                        "$ref": "#/components/schemas/Amount"
+                    },
+                    "paymentTool": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Платежный инструмент.",
+                        "default": "card"
+                    },
+                    "auth": {
+                        "$ref": "#/components/schemas/AuthData"
+                    },
+                    "withHold": {
+                        "type": "boolean",
+                        "description": "Признак двухстадийной операции. null => false",
+                        "nullable": true
+                    },
+                    "partnerBindId": {
+                        "type": "string",
+                        "description": "Идентификатор привязки. Создается если задан.",
+                        "nullable": true
+                    },
+                    "expirationDate": {
+                        "type": "string",
+                        "description": "Ограничение времени жизни платежа.",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "redirect": {
+                        "$ref": "#/components/schemas/Redirect"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Описание платежа.",
+                        "default": "Тестовый платеж",
+                        "nullable": true
+                    },
+                    "testCase": {
+                        "type": "string",
+                        "description": "Используется только в тестовых средах.",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "x-stoplight": {
+                    "id": "ov5c85orrqqh7"
+                }
+            },
+            "CreatePaymentResponse": {
+                "required": [
+                    "partnerPaymentId",
+                    "paymentId",
+                    "state"
+                ],
+                "type": "object",
+                "properties": {
+                    "partnerPaymentId": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Идентификатор платежа на стороне партнера."
+                    },
+                    "paymentId": {
+                        "type": "string",
+                        "description": "Идентификатор платежа в refill-service.",
+                        "format": "uuid"
+                    },
+                    "channelPaymentId": {
+                        "type": "string",
+                        "description": "Идентификатор платежа на стороне агентского канала.",
+                        "nullable": true
+                    },
+                    "state": {
+                        "$ref": "#/components/schemas/PaymentState"
+                    },
+                    "stateDescription": {
+                        "type": "string",
+                        "description": "Описание статуса платежа.",
+                        "nullable": true
+                    },
+                    "confirmation": {
+                        "$ref": "#/components/schemas/Confirmation"
+                    },
+                    "channelPaymentProperties": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "description": "Дополнительные данные платежа на стороне агентского канала.",
+                        "nullable": true
+                    },
+                    "merchantCommission": {
+                        "type": "number",
+                        "description": "Комиссия с мерчанта.",
+                        "format": "double",
+                        "nullable": true
+                    },
+                    "payerCommission": {
+                        "type": "number",
+                        "description": "Комиссия с плательщика.",
+                        "format": "double",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "x-stoplight": {
+                    "id": "7w67qx8vn8502"
+                }
+            },
+            "CreateRefundRequest": {
+                "required": [
+                    "amount",
+                    "partnerPaymentId",
+                    "partnerRefundId"
+                ],
+                "type": "object",
+                "properties": {
+                    "partnerPaymentId": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Идентификатор платежа на стороне партнера.",
+                        "default": "PartnerPaymentId"
+                    },
+                    "partnerRefundId": {
+                        "type": "string",
+                        "description": "Идентификатор возврата на стороне партнера.",
+                        "default": "PartnerRefundId",
+                        "nullable": true
+                    },
+                    "amount": {
+                        "type": "number",
+                        "description": "Сумма возврата по платежу.",
+                        "format": "double"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Описание возврата по платежу.",
+                        "default": "Тестовый возврат",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "x-stoplight": {
+                    "id": "lj33ykf9uyh8r"
+                }
+            },
+            "CreateRefundResponse": {
+                "required": [
+                    "partnerPaymentId",
+                    "partnerRefundId",
+                    "paymentId",
+                    "refundId",
+                    "state"
+                ],
+                "type": "object",
+                "properties": {
+                    "partnerRefundId": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Идентификатор возврата на стороне партнера."
+                    },
+                    "refundId": {
+                        "type": "string",
+                        "description": "Идентификатор возврата в refill-service.",
+                        "format": "uuid"
+                    },
+                    "channelRefundId": {
+                        "type": "string",
+                        "description": "Идентификатор возврата на стороне агентского канала.",
+                        "nullable": true
+                    },
+                    "partnerPaymentId": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Идентификатор платежа на стороне партнера."
+                    },
+                    "paymentId": {
+                        "type": "string",
+                        "description": "Идентификатор платежа в refill-service.",
+                        "format": "uuid"
+                    },
+                    "state": {
+                        "$ref": "#/components/schemas/OperationState"
+                    },
+                    "stateDescription": {
+                        "type": "string",
+                        "description": "Описание статуса операции refund.",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "x-stoplight": {
+                    "id": "41i9xp1u025t0"
+                }
+            },
+            "GetBindResponse": {
+                "required": [
+                    "bindId",
+                    "channelBindId",
+                    "created",
+                    "description",
+                    "isActive",
+                    "modified",
+                    "partnerBindId"
+                ],
+                "type": "object",
+                "properties": {
+                    "partnerBindId": {
+                        "type": "string",
+                        "description": "Идентификатор привязки на стороне партнера.",
+                        "nullable": true
+                    },
+                    "bindId": {
+                        "type": "string",
+                        "description": "Идентификатор привязки в refill-service.",
+                        "format": "uuid"
+                    },
+                    "channelBindId": {
+                        "type": "string",
+                        "description": "Идентификатор привязки на стороне агентского канала.",
+                        "nullable": true
+                    },
+                    "isActive": {
+                        "type": "boolean",
+                        "description": "Активность привязки."
+                    },
+                    "created": {
+                        "type": "string",
+                        "description": "Дата создания привязки в refill-service.",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "description": "Дата модификации привязки в refill-service.",
+                        "format": "date-time"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Описание привязки.",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "x-stoplight": {
+                    "id": "rzbo5d8qx8ba3"
+                }
+            },
+            "GetMerchantResponse": {
+                "required": [
+                    "created",
+                    "isEnabled",
+                    "isRefundEnabled",
+                    "merchantId",
+                    "merchantName",
+                    "modified",
+                    "partnerMerchantId"
+                ],
+                "type": "object",
+                "properties": {
+                    "partnerMerchantId": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Идентификатор мерчанта на стороне партнера."
+                    },
+                    "merchantId": {
+                        "type": "string",
+                        "description": "Идентификатор мерчанта на стороне refill-service.",
+                        "format": "uuid"
+                    },
+                    "merchantName": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Наименование мерчанта."
+                    },
+                    "isEnabled": {
+                        "type": "boolean",
+                        "description": "Доступность любых операций для мерчанта."
+                    },
+                    "isRefundEnabled": {
+                        "type": "boolean",
+                        "description": "Доступность операций возврата для мерчанта."
+                    },
+                    "created": {
+                        "type": "string",
+                        "description": "Дата создания мерчанта в refill-service.",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "description": "Дата модификации мерчанта в refill-service.",
+                        "format": "date-time"
+                    }
+                },
+                "additionalProperties": false,
+                "x-stoplight": {
+                    "id": "qtkd186cp0r0n"
+                }
+            },
+            "GetPaymentResponse": {
+                "required": [
+                    "amount",
+                    "created",
+                    "isCanceled",
+                    "isReccurent",
+                    "merchantCommission",
+                    "modified",
+                    "paid",
+                    "partnerMerchantId",
+                    "partnerPaymentId",
+                    "payerCommission",
+                    "paymentId",
+                    "paymentTool",
+                    "refunded",
+                    "refunding",
+                    "state",
+                    "withBind",
+                    "withHold"
+                ],
+                "type": "object",
+                "properties": {
+                    "partnerPaymentId": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Идентификатор платежа на стороне партнера."
+                    },
+                    "paymentId": {
+                        "type": "string",
+                        "description": "Идентификатор платежа в refill-service.",
+                        "format": "uuid"
+                    },
+                    "channelPaymentId": {
+                        "type": "string",
+                        "description": "Идентификатор платежа на стороне агентского канала.",
+                        "nullable": true
+                    },
+                    "state": {
+                        "$ref": "#/components/schemas/PaymentState"
+                    },
+                    "stateDescription": {
+                        "type": "string",
+                        "description": "Описание статуса платежа.",
+                        "nullable": true
+                    },
+                    "confirmation": {
+                        "$ref": "#/components/schemas/Confirmation"
+                    },
+                    "channelPaymentProperties": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "description": "Дополнительные данные платежа на стороне агентского канала.",
+                        "nullable": true
+                    },
+                    "partnerMerchantId": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Идентификатор мерчанта на стороне партнера.",
+                        "default": "PartnerMerchantId"
+                    },
+                    "paymentTool": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Платежный инструмент."
+                    },
+                    "amount": {
+                        "$ref": "#/components/schemas/Amount"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Описание платежа.",
+                        "nullable": true
+                    },
+                    "created": {
+                        "type": "string",
+                        "description": "Дата создания платежа в refill-service.",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "description": "Дата модификации платежа в refill-service.",
+                        "format": "date-time"
+                    },
+                    "refunding": {
+                        "type": "number",
+                        "description": "В процессе возврата.",
+                        "format": "double"
+                    },
+                    "refunded": {
+                        "type": "number",
+                        "description": "Возвращено.",
+                        "format": "double"
+                    },
+                    "paid": {
+                        "type": "number",
+                        "description": "Оплачено.",
+                        "format": "double"
+                    },
+                    "redirect": {
+                        "$ref": "#/components/schemas/Redirect"
+                    },
+                    "isCanceled": {
+                        "type": "boolean",
+                        "description": "Платеж отменен."
+                    },
+                    "withBind": {
+                        "type": "boolean",
+                        "description": "Платеж с привязкой."
+                    },
+                    "withHold": {
+                        "type": "boolean",
+                        "description": "Платеж двухстадийный."
+                    },
+                    "isReccurent": {
+                        "type": "boolean",
+                        "description": "Платеж рекуррентный."
+                    },
+                    "merchantCommission": {
+                        "type": "number",
+                        "description": "Комиссия с мерчанта.",
+                        "format": "double"
+                    },
+                    "payerCommission": {
+                        "type": "number",
+                        "description": "Комиссия с плательщика.",
+                        "format": "double"
+                    }
+                },
+                "additionalProperties": false,
+                "x-stoplight": {
+                    "id": "ce9990g5qjz54"
+                }
+            },
+            "GetRefundResponse": {
+                "required": [
+                    "amount",
+                    "created",
+                    "modified",
+                    "partnerPaymentId",
+                    "partnerRefundId",
+                    "paymentId",
+                    "refundId",
+                    "refundNumber",
+                    "state"
+                ],
+                "type": "object",
+                "properties": {
+                    "partnerRefundId": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Идентификатор возврата на стороне партнера."
+                    },
+                    "refundId": {
+                        "type": "string",
+                        "description": "Идентификатор возврата в refill-service.",
+                        "format": "uuid"
+                    },
+                    "channelRefundId": {
+                        "type": "string",
+                        "description": "Идентификатор возврата на стороне агентского канала.",
+                        "nullable": true
+                    },
+                    "partnerPaymentId": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Идентификатор платежа на стороне партнера."
+                    },
+                    "paymentId": {
+                        "type": "string",
+                        "description": "Идентификатор платежа в refill-service.",
+                        "format": "uuid"
+                    },
+                    "state": {
+                        "$ref": "#/components/schemas/OperationState"
+                    },
+                    "stateDescription": {
+                        "type": "string",
+                        "description": "Описание статуса операции refund.",
+                        "nullable": true
+                    },
+                    "refundNumber": {
+                        "type": "integer",
+                        "description": "Порядковый номер возврата.",
+                        "format": "int32"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "description": "Сумма возврата.",
+                        "format": "double"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Описание возврата.",
+                        "nullable": true
+                    },
+                    "created": {
+                        "type": "string",
+                        "description": "Дата создания возварат в refill-service.",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "description": "Дата модификации возврата в refill-service.",
+                        "format": "date-time"
+                    }
+                },
+                "additionalProperties": false,
+                "x-stoplight": {
+                    "id": "4gw0ynqkgh0nv"
+                }
+            },
+            "HttpAction": {
+                "required": [
+                    "method",
+                    "url"
+                ],
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Http aдрес."
+                    },
+                    "method": {
+                        "type": "string",
+                        "description": "Http метод POST|GET",
+                        "nullable": true
+                    },
+                    "params": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "description": "Параметры вызова метода.",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": false,
+                "x-stoplight": {
+                    "id": "4zm1ul92wed84"
+                }
+            },
+            "OperationState": {
+                "enum": [
+                    "none",
+                    "processing",
+                    "success",
+                    "error"
+                ],
+                "type": "string",
+                "x-stoplight": {
+                    "id": "iks8w5kw0v054"
+                }
+            },
+            "PaymentState": {
+                "enum": [
+                    "none",
+                    "confirmationWaiting",
+                    "processing",
+                    "holded",
+                    "rejected",
+                    "paid",
+                    "error"
+                ],
+                "type": "string",
+                "x-stoplight": {
+                    "id": "gmcqrip8lqz8l"
+                }
+            },
+            "ProblemDetails": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "title": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "integer",
+                        "format": "int32",
+                        "nullable": true
+                    },
+                    "detail": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "instance": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "additionalProperties": {},
+                "x-stoplight": {
+                    "id": "qx3fnsuayrkmx"
+                }
+            },
+            "Redirect": {
+                "required": [
+                    "failUrl",
+                    "successUrl"
+                ],
+                "type": "object",
+                "properties": {
+                    "successUrl": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Перенаправления в случае успеха",
+                        "default": "http://localhost/success"
+                    },
+                    "failUrl": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Перенаправления в случае ошибки",
+                        "default": "http://localhost/fail"
+                    }
+                },
+                "additionalProperties": false,
+                "x-stoplight": {
+                    "id": "ddyl3xrk9povy"
+                }
+            },
+            "RejectPaymentResponse": {
+                "required": [
+                    "created",
+                    "partnerPaymentId",
+                    "paymentId",
+                    "rejectId",
+                    "state"
+                ],
+                "type": "object",
+                "properties": {
+                    "rejectId": {
+                        "type": "string",
+                        "description": "Идентификатор reject в refill-service.",
+                        "format": "uuid"
+                    },
+                    "partnerPaymentId": {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "Идентификатор платежа на стороне партнера."
+                    },
+                    "paymentId": {
+                        "type": "string",
+                        "description": "Идентификатор платежа в refill-service.",
+                        "format": "uuid"
+                    },
+                    "state": {
+                        "$ref": "#/components/schemas/OperationState"
+                    },
+                    "stateDescription": {
+                        "type": "string",
+                        "description": "Описание статуса операции reject.",
+                        "nullable": true
+                    },
+                    "created": {
+                        "type": "string",
+                        "description": "Дата создания reject в refill-service.",
+                        "format": "date-time"
+                    }
+                },
+                "additionalProperties": false,
+                "x-stoplight": {
+                    "id": "d34v28yo05j5p"
+                }
+            }
+        },
+        "securitySchemes": {
+            "ApiKey": {
+                "type": "apiKey",
+                "name": "testpartner.3YrQlwYnTcZUljVIi9FsxjuJiocj4Fyf",
+                "in": "header",
+                "description": "Параметр генерируется в системе KeyCloack при обращении в ИБ"
+            }
+        }
+    },
+    "security": [
+        {
+            "ApiKey": []
+        }
+    ],
+    "x-internal": false,
+    "servers": [
+        {
+            "url": "http://10.203.148.11:5012",
+            "description": "RefillDev"
+        }
+    ]
+}

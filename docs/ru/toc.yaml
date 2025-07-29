@@ -1,0 +1,34 @@
+title: Wallet One - портал документации
+href: index.yaml
+
+# analytics:
+#   text: 'Мы используем файлы cookie, чтобы вы могли наилучшим образом пользоваться нашим веб-сайтом. Если вы продолжаете использовать наш веб-сайт, мы полагаем, что вы согласны с таким использованием.'
+#   buttons:
+#     accept:
+#       text: "Ок"
+#       theme: "accent"
+#       size: "xl"
+
+navigation:
+  logo:
+    url: "https://github.ru/"
+    dark:
+      icon: "w1-logo.png"
+    light:
+      icon: "w1-logo.png"
+  header:
+    # leftItems:
+    #   - text: "Оглавление"
+    #     type: "link"
+    #     url: "../ru"
+    #   - text: "Помощь"
+    #     type: "link"
+    #     url: "./help"
+    rightItems:
+      - type: 'controls'
+
+items:
+  - name: Помощь
+    href: help.md
+  - name: Правила
+    href: rules.md

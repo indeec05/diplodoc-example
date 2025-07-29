@@ -1,0 +1,852 @@
+openapi: 3.0.1
+x-stoplight:
+  id: thz5zsuujzf14
+info:
+  title: pdproxy-service
+  description: PD PROXY
+  version: rc-2.1.4
+servers:
+  - url: 'http://10.202.37.20:93'
+    description: Generated server url
+tags:
+  - name: Actuator
+    description: Monitor and interact
+    externalDocs:
+      description: Spring Boot Actuator Web API Documentation
+      url: 'https://docs.spring.io/spring-boot/docs/current/actuator-api/html/'
+paths:
+  /stolotoIdent/result:
+    post:
+      tags:
+        - partner-personal-data-controller
+      operationId: setPersonalDataStatus
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResultPersonalDataRequestDTO'
+        required: true
+      responses:
+        '200':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CodeDTO'
+        '400':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '412':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-stoplight:
+        id: 655u98jeuhyjk
+      x-internal: true
+  '/identification/{walletNumber}':
+    post:
+      tags:
+        - partner-personal-data-controller
+      operationId: identificationThrowPartner
+      parameters:
+        - name: partnerId
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: walletNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonalDataRequestDTO'
+        required: true
+      responses:
+        '200':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PartnerPersonalDataResponseDTO'
+        '400':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '412':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-stoplight:
+        id: fgd4l31hxxkdy
+      x-internal: true
+  '/identification/status/{walletNumber}':
+    get:
+      tags:
+        - partner-personal-data-controller
+      operationId: getIdentificationStatus
+      parameters:
+        - name: partnerId
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: walletNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PersonalDataStatusResponseDTO'
+        '400':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '412':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-stoplight:
+        id: b3espd8srqwd5
+      x-internal: true
+  '/personalData/{userId}':
+    get:
+      tags:
+        - partner-personal-data-controller
+      operationId: getPersonalDataByUserId
+      parameters:
+        - name: x-request-id
+          in: header
+          required: true
+          schema:
+            type: string
+          description: id запроса
+        - name: partnerId
+          in: header
+          required: false
+          schema:
+            type: string
+          description: partnerId партнера
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: walletNumber пользователя
+          example: '771447441253'
+      responses:
+        '200':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PersonalDataResponseDTO'
+              examples:
+                200 ответ:
+                  value:
+                    code: 0
+                    data:
+                      transactionId: 1244ddfdf
+                      userId: 730524339574
+                      email: fdsdfsd@yayax.ru
+                      phone: '9607032110'
+                      lastName: hfghd
+                      firstName: hfgdhfdg
+                      middleName: nvcbn
+                      birthDate: '1983-02-12'
+                      passCountry: RUSSIA
+                      passNumber: '282222615'
+                      passIssueDate: '2004-07-28'
+                      passIssuer: ОВД djfdgjрайона
+                      passIssuerCode: '692038'
+                      birthPlace: поселок fdtgj
+                      kycLevel: 5
+                      identDateTime: 1724829654
+                      gender: M
+                      selfEmployedConfirmed: 'false'
+                      selfEmployedConfirmDate: '20.01.1970 15:49:44'
+                      addresses:
+                        - id: 9c2f3e06-952f-4c3b-a70c-b0183132418c
+                          addressType: PRG
+                          zipCode: '171842'
+                          countryId: RUS
+                          addressStr: 'обл fgd, г Удомля, ул Космонавтов'
+                          building: null
+                          frame: null
+                          frameType: null
+                          house: '71'
+                          flat: '26'
+                          room: null
+                          fiasCode: 3e7a510a-7457-4064-9e3c-d327caff2e4d
+                          fiasCodeLevel: null
+                          region: Тверская
+                          city: Удомля
+                          district: null
+                          area: null
+                          settlement: null
+                          additionArea: null
+                          additionAreaStreet: null
+                          street: Космонавтов
+                        - id: f7f9feb8-118a-4a3e-8841-81ebf84e219a
+                          addressType: PLV
+                          zipCode: '171842'
+                          countryId: RUS
+                          addressStr: 'Тверская обл, bcxvр-н, г bcvbx, ул Космонавтов'
+                          building: null
+                          frame: null
+                          frameType: null
+                          house: '27'
+                          flat: '16'
+                          room: null
+                          fiasCode: 3e7a510a-7457-4064-9e3c-d327caff2e4d
+                          fiasCodeLevel: null
+                          region: Тверская обл
+                          city: г bcvcb
+                          district: null
+                          area: bvvр-н
+                          settlement: null
+                          additionArea: null
+                          additionAreaStreet: null
+                          street: ул vvv
+        '400':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '412':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-stoplight:
+        id: licmn14tfdnir
+      summary: GET PersonalData
+  '/personalData/{walletNumber}/identification/expire':
+    post:
+      tags:
+        - partner-personal-data-controller
+      operationId: userIdentificationExpire
+      parameters:
+        - name: walletNumber
+          in: path
+          required: true
+          schema:
+            type: string
+          description: walletNumber пользователя
+        - name: partnerId
+          in: header
+          required: false
+          schema:
+            type: string
+          description: ' Id партнера в системе Mycellium'
+      responses:
+        '200':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                type: string
+              examples:
+                '': {}
+        '500':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                Несуществующий кошелек:
+                  value:
+                    timestamp: '2024-12-11T13:51:52.495+0000'
+                    status: 500
+                    error: Internal Server Error
+                    message: '[404 ] during [POST] to [ http://user/users/wallet/708189355112/identification/expire]  [UserServiceClient#userIdentificationExpireByWalletNumber(String,Long)]: [{"code":9,"description":"User[708189355112] not found","fieldErrors":null}]'
+                    path: /personalData/708189355112/identification/expire
+      description: |-
+        Метод, для сброса текущей активной ИД на кошельке пользователя
+        В случае успеха, в ответ приходит 200ый http статус, заявка переходит в статус "EXPIRED"
+      summary: POST Identification Expire
+  /health/ping:
+    get:
+      tags:
+        - internal-controller
+      operationId: getHealthCheckPing
+      responses:
+        '200':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Ping'
+        '400':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '412':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-stoplight:
+        id: vzygkebb5cwho
+      x-internal: true
+  /health/**:
+    get:
+      tags:
+        - Actuator
+      summary: Actuator web endpoint 'health-path'
+      operationId: handle_0
+      responses:
+        '200':
+          description: default response
+          content: {}
+        '400':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '412':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-stoplight:
+        id: 7e09n20fxddcu
+      x-internal: true
+  /health:
+    get:
+      tags:
+        - Actuator
+      summary: Actuator web endpoint 'health'
+      operationId: handle_1
+      responses:
+        '200':
+          description: default response
+          content: {}
+        '400':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '412':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-stoplight:
+        id: hwvc2ymvwskmf
+      x-internal: true
+  /info:
+    get:
+      tags:
+        - Actuator
+      summary: Actuator web endpoint 'info'
+      operationId: handle_2
+      responses:
+        '200':
+          description: default response
+          content: {}
+        '400':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '412':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-stoplight:
+        id: i7rydwb9cbpjp
+      x-internal: true
+  /metrics:
+    get:
+      tags:
+        - Actuator
+      summary: Actuator web endpoint 'prometheus'
+      operationId: handle_3
+      responses:
+        '200':
+          description: default response
+          content: {}
+        '400':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '412':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      x-stoplight:
+        id: 4rjouwjevoprj
+      x-internal: true
+components:
+  schemas:
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        description:
+          type: string
+        fieldErrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiFieldError'
+      x-stoplight:
+        id: 87femldos41gw
+    ApiFieldError:
+      type: object
+      properties:
+        objectName:
+          type: string
+        field:
+          type: string
+        message:
+          type: string
+      x-stoplight:
+        id: yliafa985pber
+    ResultPersonalDataRequestDTO:
+      required:
+        - transactionId
+      type: object
+      properties:
+        transactionId:
+          type: string
+        identStatusCode:
+          type: integer
+          format: int32
+        dataOwner:
+          type: string
+        errorMessage:
+          type: string
+      x-stoplight:
+        id: lebah093skaar
+    CodeDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+      x-stoplight:
+        id: 3l6lo8enzihys
+    PersonalDataRequestDTO:
+      required:
+        - birthDate
+        - firstName
+        - inn
+        - lastName
+        - passCountry
+        - passIssueDate
+        - passIssuerOrgCode
+        - passIssuerOrgName
+        - passNumber
+        - passSerial
+        - requestId
+      type: object
+      properties:
+        requestId:
+          type: string
+        lastName:
+          type: string
+        firstName:
+          type: string
+        middleName:
+          type: string
+        birthDate:
+          type: string
+        inn:
+          type: string
+        passSerial:
+          type: string
+        passNumber:
+          type: string
+        passIssuerOrgName:
+          type: string
+        passIssuerOrgCode:
+          type: string
+        passIssueDate:
+          type: string
+        passCountry:
+          type: string
+        passportFullNumber:
+          type: string
+      x-stoplight:
+        id: 8ionh5jux6qe7
+    PartnerPersonalDataResponseDTO:
+      required:
+        - code
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+      x-stoplight:
+        id: dt8bmmn6xm7ud
+    PersonalDataStatusResponseDTO:
+      required:
+        - code
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        description:
+          type: string
+      x-stoplight:
+        id: pxcr0hggma1h3
+    AddressDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        addressType:
+          type: string
+        zipCode:
+          type: string
+        countryId:
+          type: string
+        addressStr:
+          type: string
+        building:
+          type: string
+        frame:
+          type: string
+        frameType:
+          type: string
+        house:
+          type: string
+        flat:
+          type: string
+        room:
+          type: string
+        fiasCode:
+          type: string
+        fiasCodeLevel:
+          type: string
+        region:
+          type: string
+        city:
+          type: string
+        district:
+          type: string
+        area:
+          type: string
+        settlement:
+          type: string
+        additionArea:
+          type: string
+        additionAreaStreet:
+          type: string
+        street:
+          type: string
+      x-stoplight:
+        id: n3u9iz5f2crt7
+    PersonalDataDTO:
+      type: object
+      x-stoplight:
+        id: nd2fnz0suljmr
+      properties:
+        transactionId:
+          type: string
+        userId:
+          type: integer
+          format: int64
+          description: walletNumber клиента
+        email:
+          type: string
+          description: "Электронная почта\_"
+        phone:
+          type: string
+          description: Номер телефона
+        lastName:
+          type: string
+          description: Фамилия
+        firstName:
+          type: string
+          description: Имя
+        middleName:
+          type: string
+          description: Отчество
+        birthDate:
+          type: string
+          description: Дата рождения
+        passCountry:
+          type: string
+          description: Гражданство
+        passNumber:
+          type: string
+          description: 'Серия и номер паспорта РФ, удостоверяющего личность'
+        passIssueDate:
+          type: string
+          description: 'Дата выдачи паспорта РФ, удостоверяющего личность'
+        passIssuer:
+          type: string
+          description: 'Кем выдан документ, удостоверяющий личность'
+        passIssuerCode:
+          type: string
+          description: Код подразделения
+        passAddress:
+          type: string
+          description: Адрес регистрации
+        birthPlace:
+          type: string
+          description: Место рождения
+        residenceAddress:
+          type: string
+          description: Адрес проживания
+        inn:
+          type: string
+          description: ИНН
+        kycLevel:
+          type: integer
+          format: int32
+          description: |-
+            Тип идентификации ИД/УПРИД.
+
+            kycLevel = 5 - упрощенная идентификация;
+            kycLevel = 10 - полная идентификация.
+        identDateTime:
+          type: integer
+          format: int64
+          description: 'Время в формате Unix Epoch (количество секунд), представляющее дату / время проведения идентификации.'
+        gender:
+          type: string
+          description: Пол
+        selfEmployedConfirmed:
+          type: string
+          description: Самозанятый
+        selfEmployedConfirmDate:
+          type: string
+          description: Дата регистрации в качестве самозанятого
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/AddressDTO'
+    PersonalDataResponseDTO:
+      type: object
+      x-stoplight:
+        id: yli9zdq4437nh
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: |-
+            Код ответа:
+            0 - успех
+        data:
+          $ref: '#/components/schemas/PersonalDataDTO'
+        errorMessage:
+          type: string
+          description: "Описание ошибки. \nВ случае, если\_сode = 0, отсутствует."
+    Ping:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - UP
+      x-stoplight:
+        id: slmhdzn6y7soi

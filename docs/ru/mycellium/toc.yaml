@@ -1,0 +1,38 @@
+title: documentation
+href: docs/1_Obshie-svedeniya.md
+items:
+  - name: Общие сведения
+    href: docs/1_Obshie-svedeniya.md
+  - name: Инструкции
+    href: docs/2_Key-instruction.md
+  - name: Описание API
+    href: docs/3_API.md
+  - name: Платежная страница
+    href: docs/4_Payment-page.md
+  - name: Регистрация партнера
+    href: docs/5_Partner_registries.md
+  - name: Вопросы
+    href: docs/6_Questions.md
+  - name: История версия
+    href: docs/0_History_of_changes.md
+  - name: Gateway Service
+    include:
+      path: gateway
+      includers:
+        - name: openapi
+          input: ru/mycellium/gateway-service_1.1.8.yaml
+      mode: link
+  - name: Donate Service
+    include:
+      path: donate
+      includers:
+        - name: openapi
+          input: ru/mycellium/donate-payment-api_dev-0edd60d.yaml
+      mode: link
+  - name: PD Proxy
+    include:
+      path: pd-proxy
+      includers:
+        - name: openapi
+          input: ru/mycellium/pdproxy-service_2.1.4_2024.08.29.yaml
+      mode: link
