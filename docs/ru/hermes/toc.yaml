@@ -6,5 +6,5 @@ items:
       path: openapi
       includers:
         - name: openapi
-          input: ru/hermes/hermes.json
+          input: docs/ru/hermes/hermes.json
       mode: link

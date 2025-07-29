@@ -16,5 +16,5 @@ items:
       path: openapi
       includers:
         - name: openapi
-          input: ru/kyc2/kyc-public-api.swagger.yaml
+          input: docs/ru/kyc2/kyc-public-api.swagger.yaml
       mode: link

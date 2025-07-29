@@ -20,19 +20,19 @@ items:
       path: gateway
       includers:
         - name: openapi
-          input: ru/mycellium/gateway-service_1.1.8.yaml
+          input: docs/ru/mycellium/gateway-service_1.1.8.yaml
       mode: link
   - name: Donate Service
     include:
       path: donate
       includers:
         - name: openapi
-          input: ru/mycellium/donate-payment-api_dev-0edd60d.yaml
+          input: docs/ru/mycellium/donate-payment-api_dev-0edd60d.yaml
       mode: link
   - name: PD Proxy
     include:
       path: pd-proxy
       includers:
         - name: openapi
-          input: ru/mycellium/pdproxy-service_2.1.4_2024.08.29.yaml
+          input: docs/ru/mycellium/pdproxy-service_2.1.4_2024.08.29.yaml
       mode: link
